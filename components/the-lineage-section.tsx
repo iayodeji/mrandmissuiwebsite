@@ -4,77 +4,55 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 interface LineageCard {
-  year: string;
   kingName: string;
   queenName: string;
   kingField: string;
   queenField: string;
   kingImage: string;
-  queenImage: string;
   isKing: boolean;
 }
 
 const LINEAGE_DATA: LineageCard[] = [
   {
-    year: "2023/2024",
     kingName: "Olubaseyi Damilare",
     queenName: "Tobiloba Oluwole",
     kingField: "Mathematics",
     queenField: "Theater Arts",
-    kingImage: "/Images-Carousels/IMG_4695.PNG",
-    queenImage: "/Images-Carousels/IMG_4740.PNG",
+    kingImage: "/Images-Carousels/IMG_4798.PNG",
     isKing: true,
   },
   {
-    year: "2023/2024",
-    kingName: "Olubaseyi Damilare",
-    queenName: "Tobiloba Oluwole",
-    kingField: "Mathematics",
-    queenField: "Theater Arts",
-    kingImage: "/Images-Carousels/IMG_4695.PNG",
-    queenImage: "/Images-Carousels/IMG_4740.PNG",
-    isKing: false,
-  },
-  {
-    year: "2022/2023",
     kingName: "Adegbenro Daniel Adebayo",
     queenName: "Onuoha Marvellous Chidinma",
     kingField: "European Studies",
     queenField: "Special Education",
-    kingImage: "/Images-Carousels/IMG_4742.PNG",
-    queenImage: "/Images-Carousels/IMG_4752.PNG",
-    isKing: true,
-  },
-  {
-    year: "2022/2023",
-    kingName: "Adegbenro Daniel Adebayo",
-    queenName: "Onuoha Marvellous Chidinma",
-    kingField: "European Studies",
-    queenField: "Special Education",
-    kingImage: "/Images-Carousels/IMG_4742.PNG",
-    queenImage: "/Images-Carousels/IMG_4752.PNG",
+    kingImage: "/Images-Carousels/IMG_4796.PNG",
     isKing: false,
   },
   {
-    year: "2021/2022 - 2023",
     kingName: "Anthony Jasper Laris",
     queenName: "Oshinyemi Promise Ogoluwa",
     kingField: "M.R UI",
     queenField: "Arts & Social Sciences",
-    kingImage: "/Images-Carousels/IMG_4757.PNG",
-    queenImage: "/Images-Carousels/IMG_4759.PNG",
-    isKing: true,
+    kingImage: "/Images-Carousels/IMG_4793.PNG",
+    isKing: false,
   },
   {
-    year: "2021/2022 - 2023",
     kingName: "Anthony Jasper Laris",
     queenName: "Oshinyemi Promise Ogoluwa",
     kingField: "M.R UI",
     queenField: "Arts & Social Sciences",
-    kingImage: "/Images-Carousels/IMG_4757.PNG",
-    queenImage: "/Images-Carousels/IMG_4759.PNG",
+    kingImage: "/Images-Carousels/image7.png",
     isKing: false,
   },
+  {
+    kingName: "Class of 2020",
+    queenName: "Class of 2020",
+    kingField: "Mr. & Mrs. UI",
+    queenField: "Mr. & Mrs. UI",
+    kingImage: "/Images-Carousels/image0.png",
+    isKing: false,
+  }
 ];
 
 export function TheLineageSection() {
@@ -95,7 +73,7 @@ export function TheLineageSection() {
       setCurrentIndex((prev) => (prev + 1) % LINEAGE_DATA.length);
     };
 
-    autoScrollRef.current = setInterval(autoScroll, 5000);
+    autoScrollRef.current = setInterval(autoScroll, 3900);
 
     return () => {
       if (autoScrollRef.current) clearTimeout(autoScrollRef.current);
@@ -147,23 +125,16 @@ export function TheLineageSection() {
         >
           <div className="lineage-carousel-track">
             <article key={`card-${currentIndex}`} className={`lineage-card lineage-card-${direction}`}>
-              <div className="lineage-year">{currentCard.year}</div>
 
               <div className="lineage-image-full">
                 <Image
-                  src={currentCard.isKing ? currentCard.kingImage : currentCard.queenImage}
-                  alt={currentCard.isKing ? currentCard.kingName : currentCard.queenName}
+                  src={currentCard.isKing ? currentCard.kingImage : currentCard.kingImage}
+                  alt={currentCard.isKing ? currentCard.kingName : currentCard.kingName}
                   fill
                   className="portrait-image-full"
                   priority
                 />
                 <div className="lineage-overlay" />
-              </div>
-
-              <div className="lineage-info-section">
-                <p className="lineage-crown-title">{currentCard.isKing ? "KING" : "QUEEN"}</p>
-                <p className="lineage-person-name">{currentCard.isKing ? currentCard.kingName : currentCard.queenName}</p>
-                <p className="lineage-field">{currentCard.isKing ? currentCard.kingField : currentCard.queenField}</p>
               </div>
             </article>
           </div>

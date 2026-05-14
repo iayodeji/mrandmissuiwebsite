@@ -19,26 +19,7 @@ const DUST_PARTICLES = [
   { left: 94, top: 86, size: 1.5, delay: 1.9, duration: 16.8, opacity: 0.34 },
 ] as const;
 
-const EVENT_DATE = new Date("2026-12-12T18:00:00+01:00");
-const DAY_IN_MS = 1000 * 60 * 60 * 24;
-
-function getDaysUntilEvent() {
-  return Math.max(0, Math.ceil((EVENT_DATE.getTime() - Date.now()) / DAY_IN_MS));
-}
-
 export function HeroSection() {
-  const [daysUntilEvent, setDaysUntilEvent] = useState(() => getDaysUntilEvent());
-
-  useEffect(() => {
-    const updateDaysUntilEvent = () => setDaysUntilEvent(getDaysUntilEvent());
-
-    updateDaysUntilEvent();
-    const timerId = window.setInterval(updateDaysUntilEvent, 60_000);
-
-    return () => {
-      window.clearInterval(timerId);
-    };
-  }, []);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -108,14 +89,27 @@ export function HeroSection() {
       <div className="orb orb-3" />
 
       <div className="crown-container">
-        <svg className="crown-svg" width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M5 50 L15 20 L30 38 L40 5 L50 38 L65 20 L75 50 Z" stroke="#C9A84C" strokeWidth="1.5" fill="none" />
-          <path d="M5 50 L75 50" stroke="#C9A84C" strokeWidth="1.5" />
-          <circle cx="40" cy="5" r="3" fill="#E8C97A" />
-          <circle cx="15" cy="20" r="2" fill="#C9A84C" />
-          <circle cx="65" cy="20" r="2" fill="#C9A84C" />
-          <circle cx="5" cy="50" r="2" fill="#C9A84C" />
-          <circle cx="75" cy="50" r="2" fill="#C9A84C" />
+        <svg className="crown-svg" width="200" height="140" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          {/* Crown band base */}
+          <path d="M20 110 L180 110" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          
+          {/* Spikes */}
+          <line x1="35" y1="110" x2="35" y2="50" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="55" y1="110" x2="55" y2="35" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="75" y1="110" x2="75" y2="20" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="100" y1="110" x2="100" y2="10" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="125" y1="110" x2="125" y2="20" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="145" y1="110" x2="145" y2="35" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="165" y1="110" x2="165" y2="50" stroke="#C9A84C" strokeWidth="2.5" strokeLinecap="round" />
+          
+          {/* Gem stones at spike tips */}
+          <circle cx="35" cy="50" r="3" fill="#E8C97A" />
+          <circle cx="55" cy="35" r="3.5" fill="#C9A84C" />
+          <circle cx="75" cy="20" r="4" fill="#E8C97A" />
+          <circle cx="100" cy="10" r="5" fill="#C9A84C" />
+          <circle cx="125" cy="20" r="4" fill="#E8C97A" />
+          <circle cx="145" cy="35" r="3.5" fill="#C9A84C" />
+          <circle cx="165" cy="50" r="3" fill="#E8C97A" />
         </svg>
       </div>
 
@@ -144,11 +138,6 @@ export function HeroSection() {
         <a className="btn-gold" href="#chapter-1">Enter the Story</a>
         <a className="btn-ghost" href="#chapter-4">The Event</a>
       </div>
-
-      <p className="hero-countdown" aria-live="polite">
-        <span className="hero-countdown-days">{daysUntilEvent}</span>
-        <span className="hero-countdown-label">days until the event</span>
-      </p>
 
       <div className="scroll-hint">
         <span>Scroll</span>

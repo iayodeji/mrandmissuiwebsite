@@ -4,22 +4,19 @@ export function ChapterOneSection() {
       <div className="chapter-left">
         <div className="big-number">I</div>
         <div className="chapter-content">
-          <p className="section-label reveal">Chapter One</p>
-          <h2 className="chapter-title reveal reveal-delay-1">
-            The <em>Calling</em>
-            <br />of Balance
-          </h2>
+          <p className="section-label reveal">Introduction</p>
+          <h2 className="chapter-title reveal reveal-delay-1">Introduction</h2>
+
           <p className="chapter-body reveal reveal-delay-2">
-            University life is a crucible. Lectures at dawn, deadlines at midnight,
-            friendships forged under pressure. Yet some students do more than survive —
-            they thrive with a quiet, extraordinary grace.
+            For over 15 years, Mr. &amp; Mrs. UI has stood as one of the most prestigious and culturally celebrated pageantry platforms within the University of Ibadan community. More than a beauty pageant, it is a platform dedicated to discovering and showcasing students who embody excellence, confidence, intelligence, creativity, leadership, and social influence.
           </p>
-          <div className="pull-quote reveal reveal-delay-3">
-            &quot;Balance is not found. It is built — one decision at a time.&quot;
-          </div>
+
+          <p className="chapter-body reveal reveal-delay-3">
+            Over the years, the platform has produced remarkable kings and queens who have gone on to inspire their communities, represent the university proudly, and leave lasting impacts both within and beyond campus.
+          </p>
+
           <p className="chapter-body reveal reveal-delay-4">
-            Mr and Miss Unibadan exists to find those students. To put a crown where
-            it belongs — not on perfection, but on excellence lived honestly.
+            Mr. &amp; Mrs. UI continues to evolve as a symbol of class, purpose, talent, and youthful expression — creating unforgettable experiences while celebrating the identity, diversity, and brilliance of UI students.
           </p>
 
           <div className="stats-grid reveal">
@@ -28,27 +25,24 @@ export function ChapterOneSection() {
               <span className="stat-label">University</span>
             </div>
             <div className="stat-cell">
-              <span className="stat-num">2</span>
+              <span className="stat-num">3</span>
               <span className="stat-label">Crowns</span>
             </div>
             <div className="stat-cell">
-              <span className="stat-num">'26</span>
-              <span className="stat-label">Edition</span>
+              <span className="stat-num">15</span>
+              <span className="stat-label">Year Anniversary</span>
             </div>
           </div>
         </div>
       </div>
 
       <div className="chapter-visual">
-        <span className="float-tag">Academic</span>
-        <span className="float-tag">Leadership</span>
-        <span className="float-tag">Grace</span>
-        <span className="float-tag">Ambition</span>
-        <div className="diamond-frame" />
-        <div className="diamond-frame-2" />
-        <div className="diamond-center">
-          <span className="diamond-glyph">B</span>
-        </div>
+        <div
+          className="chapter-visual-image"
+          role="img"
+          aria-label="Chapter visual"
+          style={{ backgroundImage: `url('/Images-Carousels/IMG_4740.PNG')` }}
+        />
       </div>
     </section>
   );

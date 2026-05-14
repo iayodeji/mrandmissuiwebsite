@@ -1,7 +1,12 @@
-const virtues = [
-  { icon: "𝓐", name: "Academic Grace", desc: "The mind sharpened by years of discipline. Performance not as performance — but as dedication made visible." },
-  { icon: "𝓛", name: "Leadership", desc: "The quiet force that moves rooms. Influence built through action, not announcement. People follow what they feel, not what they hear." },
-  { icon: "𝓒", name: "Character", desc: "Who you are when no one watches. The crown sees through performance. It seeks the person beneath the presentation." },
+import Image from "next/image";
+
+const hallOfFame = [
+  { src: "/image1.png" },
+  { src: "/image2.png" },
+  { src: "/image3.png" },
+  { src: "/image4.png" },
+  { src: "/image5.png" },
+  { src: "/image6.png" },
 ] as const;
 
 const marqueeItems = [
@@ -36,12 +41,19 @@ export function ChapterThreeSection() {
         </div>
       </div>
 
-      <div className="chapter-3-grid reveal">
-        {virtues.map((virtue) => (
-          <div className="virtue-card" key={virtue.name}>
-            <span className="virtue-icon">{virtue.icon}</span>
-            <span className="virtue-name">{virtue.name}</span>
-            <p className="virtue-desc">{virtue.desc}</p>
+      <div className="hall-of-fame reveal">
+        {hallOfFame.map((portrait, index) => (
+          <div className="portrait-frame" key={`portrait-${index}`}>
+            <div className="portrait-wrapper">
+              <Image
+                src={portrait.src}
+                alt={`Hall of Fame Portrait ${index + 1}`}
+                fill
+                sizes="(max-width: 600px) 80vw, (max-width: 900px) 45vw, 280px"
+                className="portrait-image"
+                priority={index < 2}
+              />
+            </div>
           </div>
         ))}
       </div>
