@@ -41,6 +41,47 @@ export function ChapterThreeSection() {
         </div>
       </div>
 
+      <div className="hall-of-fame-container">
+        <div className="hall-of-fame-header">
+          <h2 className="chapter-title reveal" style={{ textAlign: "center", fontSize: "clamp(2.5rem,5vw,5rem)", marginBottom: "0.5rem" }}>
+            Hall of Fame
+          </h2>
+          <p className="section-label reveal" style={{ justifyContent: "center", fontSize: "0.95rem", fontStyle: "italic" }}>Legacy of Excellence</p>
+        </div>
+
+        <div className="hall-of-fame-content reveal reveal-delay-1">
+          <div className="hof-intro">
+            <p className="chapter-body">
+              The Hall of Fame is a dedicated space within Mr. &amp; Mrs. UI that celebrates individuals who have gone beyond the crown to define what true excellence in pageantry represents within and beyond the University of Ibadan community.
+            </p>
+          </div>
+
+          <div className="hof-section">
+            <p className="chapter-body">
+              This section honors past kings, queens, and outstanding figures who have not only excelled during their reign but have also carried the UI identity onto larger stages — representing the institution at external pageants, cultural platforms, leadership spaces, and creative industries with distinction.
+            </p>
+          </div>
+
+          <div className="hof-section">
+            <p className="chapter-body">
+              The Hall of Fame is reserved for individuals whose impact extends beyond competition — those who have shown consistency, influence, growth, and excellence in the pageantry space. It reflects a legacy of individuals who turned their titles into platforms of representation, advocacy, and achievement.
+            </p>
+          </div>
+
+          <div className="hof-section">
+            <p className="chapter-body">
+              More than recognition, this space serves as a reminder of what is possible. It highlights the journey of those who have worn the crown and continued to shine, reinforcing the standard of excellence that Mr. &amp; Mrs. UI stands for.
+            </p>
+          </div>
+
+          <div className="hof-closing">
+            <p className="chapter-body" style={{ fontStyle: "italic", fontWeight: "500" }}>
+              It is not just a record of winners — it is a celebration of legacy, influence, and the enduring mark of UI royalty.
+            </p>
+          </div>
+        </div>
+      </div>
+
       <div className="hall-of-fame reveal">
         {hallOfFame.map((portrait, index) => (
           <div className="portrait-frame" key={`portrait-${index}`}>
