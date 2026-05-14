@@ -8,8 +8,9 @@ export function SiteFooter() {
         </div>
         <div className="sponsor-badge">
           <span className="sponsor-label">Proudly Sponsored by</span>
-          <div style={{ fontFamily: "var(--font-cinzel), serif", fontSize: "1.2rem", color: "var(--gold)" }}> Inioluwa Ayodeji</div>
-          <div style={{ fontSize: "0.65rem", color: "rgba(250,248,245,0.3)", letterSpacing: "0.1em", marginTop: "0.25rem" }}>edbox.app</div>
+          <div style={{ fontFamily: "var(--font-cinzel), serif", fontSize: "1.2rem", color: "var(--gold)", fontWeight: "bold" }}>Kioskk</div>
+          <div style={{ fontSize: "0.5rem", color: "rgba(250,248,245,0.6)", letterSpacing: "0.05em", marginTop: "0.1rem" }}>Inioluwa Ayodeji</div>
+          <div style={{ fontSize: "0.65rem", color: "rgba(250,248,245,0.3)", letterSpacing: "0.1em", marginTop: "0.25rem" }}>Kioskk.me</div>
         </div>
       </div>
       <div className="footer-bottom">
