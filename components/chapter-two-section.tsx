@@ -1,39 +1,74 @@
+import { CONTESTANTS, formatVotes, getInitials, type Contestant } from "./editorial-data";
+
+function ContestantCard({ contestant }: { contestant: Contestant }) {
+  const isProfile = contestant.action === "profile";
+
+  return (
+    <article className="contestant-card">
+      <div
+        className="contestant-image-wrap contestant-placeholder"
+        role="img"
+        aria-label={`Portrait placeholder for ${contestant.name}`}
+      >
+        <span className="number-badge" aria-label={`Contestant ${contestant.number}`}>
+          {contestant.number}
+        </span>
+        <div className="placeholder-art" aria-hidden="true">
+          <span className="placeholder-orbit" />
+          <span className="placeholder-monogram">{getInitials(contestant.name)}</span>
+          <span className="placeholder-caption mono">Portrait study / 2026</span>
+        </div>
+      </div>
+      <div className="contestant-info">
+        <h3 className="contestant-name">{contestant.name}</h3>
+        <div className="contestant-field">
+          <span>{contestant.discipline}</span>
+          <span>{contestant.reign}</span>
+        </div>
+        <p className="contestant-quote">“{contestant.quote}”</p>
+        <div className="vote-row">
+          <span className="vote-count">{formatVotes(contestant.voteCount)}</span>
+          <a
+            className="vote-button focus-ring"
+            href={isProfile ? "#top" : "#leaderboard"}
+            aria-label={`${contestant.actionLabel} for ${contestant.name}`}
+          >
+            {contestant.actionLabel} <span aria-hidden="true">{isProfile ? "↗" : "♥"}</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function ChapterTwoSection() {
   return (
-    <section id="chapter-2">
-      <div className="chapter-2-header">
-        <p className="section-label reveal" style={{ justifyContent: "center" }}>Vision &amp; Mission</p>
-        <h2 className="chapter-title reveal reveal-delay-1" style={{ textAlign: "center", fontSize: "clamp(2.5rem,5vw,5rem)" }}>
-          Our <em>Purpose</em>
-        </h2>
-      </div>
-
-      <div className="vision-mission-container">
-        <input id="vm-vision" className="vm-input" type="radio" name="vm" defaultChecked />
-        <input id="vm-mission" className="vm-input" type="radio" name="vm" />
-
-        <div className="vm-tabs" role="tablist" aria-label="Vision and Mission">
-          <label htmlFor="vm-vision" className="vm-tab" role="tab">Vision</label>
-          <label htmlFor="vm-mission" className="vm-tab" role="tab">Mission</label>
+    <section className="contestants-section" id="contestants" aria-labelledby="contestants-title">
+      <div className="contestants-inner">
+        <div className="section-heading-row">
+          <div>
+            <p className="eyebrow dark-eyebrow">02 / The candidates</p>
+            <h2 className="section-title" id="contestants-title">
+              Meet the
+              <br />
+              <em>contenders.</em>
+            </h2>
+          </div>
+          <p className="contestants-summary">
+            Every portrait carries a different discipline, story, and kind of presence. Choose the candidate whose journey deserves your vote.
+          </p>
         </div>
 
-        <div className="vm-panels">
-          <div className="vm-panel vision-section reveal reveal-delay-2" role="tabpanel" aria-labelledby="vm-vision">
-            <h3 className="section-subheading">Vision</h3>
-            <p className="chapter-body">
-              To build a prestigious platform that empowers students to become symbols of excellence, leadership, creativity, and positive influence within the university community and beyond.
-            </p>
-          </div>
+        <div className="contestant-grid">
+          {CONTESTANTS.map((contestant) => (
+            <ContestantCard contestant={contestant} key={contestant.id} />
+          ))}
+        </div>
 
-          <div className="vm-panel mission-section reveal reveal-delay-3" role="tabpanel" aria-labelledby="vm-mission">
-            <h3 className="section-subheading">Mission</h3>
-            <ul className="mission-list">
-              <li className="mission-item">To promote confidence, intelligence, talent, and leadership among students.</li>
-              <li className="mission-item">To provide opportunities for self-expression, personal growth, and visibility.</li>
-              <li className="mission-item">To celebrate beauty, culture, creativity, and individuality in a meaningful way.</li>
-              <li className="mission-item">To uphold a legacy of excellence and impactful representation within the University of Ibadan community.</li>
-            </ul>
-          </div>
+        <div className="all-contestants">
+          <a className="ghost-button wine-outline focus-ring" href="#contestants">
+            View all contestants <span aria-hidden="true">⌄</span>
+          </a>
         </div>
       </div>
     </section>

@@ -1,13 +1,38 @@
+const navigation = [
+  { label: "Contestants", href: "#contestants" },
+  { label: "Leaderboard", href: "#leaderboard" },
+  { label: "About", href: "#about" },
+  { label: "The Night", href: "#the-night" },
+] as const;
+
 export function SiteHeader() {
   return (
-    <nav>
-      <div className="nav-logo">Mr and Miss Unibadan 2026</div>
-      <ul className="nav-links">
-        <li><a href="#chapter-1">The Calling</a></li>
-        <li><a href="#chapter-2">The Journey</a></li>
-        <li><a href="#chapter-3">The Crown</a></li>
-        <li><a href="#chapter-4">The Night</a></li>
-      </ul>
-    </nav>
+    <header className="site-header">
+      <div className="site-header__inner">
+        <a className="brand focus-ring" href="#top" aria-label="Mr and Miss Unibadan 2026 home">
+          Mr &amp; Miss UI <span>/ 2026</span>
+        </a>
+
+        <nav className="nav-links" aria-label="Primary navigation">
+          {navigation.map((item) => (
+            <a className="focus-ring" href={item.href} key={item.href}>
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <a className="nav-cta focus-ring" href="#contestants">
+          Vote now <span aria-hidden="true">↘</span>
+        </a>
+      </div>
+
+      <nav className="mobile-rail" aria-label="Mobile navigation">
+        {navigation.map((item) => (
+          <a className="focus-ring" href={item.href} key={item.href}>
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </header>
   );
 }
