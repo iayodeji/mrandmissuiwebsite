@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html><head>
+  <meta charset="utf-8">
+  <meta name="kombai-design-canvas" content="true">
+  <base href="http://localhost:19333/">
+  
+  
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  
+  <style>html, body { margin: 0; padding: 0; } #root { display: contents; }</style>
+</head><body>
+  <div id="root"><style data-kid="0">
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root {
+    --black: #0d090a;
+    --black-soft: #171011;
+    --black-panel: #201516;
+    --wine-deep: #2b080d;
+    --wine: #5d1018;
+    --wine-mid: #741923;
+    --wine-bright: #8c242d;
+    --gold: #c5a15b;
+    --gold-light: #e4c47b;
+    --cream: #f2eadc;
+    --cream-soft: #d8ccbd;
+    --muted: #aa9a92;
+    --hairline: rgba(242, 234, 220, .18);
+    --hairline-dark: rgba(13, 9, 10, .18);
+  }
+
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--black); color: var(--cream); font-family: 'Inter', sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; }
+  .display { font-family: 'Cormorant Garamond', Georgia, serif; }
+  .mono { font-family: 'DM Mono', monospace; }
+  .hairline { border-color: var(--hairline); }
+  .focus-ring:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 5px; }
+  .eyebrow { display: flex; align-items: center; gap: 12px; color: var(--gold-light); font: 10px 'DM Mono', monospace; letter-spacing: .26em; text-transform: uppercase; }
+  .eyebrow::before { content: ''; width: 38px; height: 1px; background: var(--gold); }
+  .section-title { margin: 0; font: 500 clamp(4rem, 8vw, 8.6rem)/.82 'Cormorant Garamond', Georgia, serif; letter-spacing: -.07em; }
+  .section-title em { color: var(--gold-light); font-style: italic; }
+  .nav { position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--hairline); background: rgba(13, 9, 10, .94); backdrop-filter: blur(18px); }
+  .nav-inner { max-width: 1440px; margin: 0 auto; min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 56px; }
+  .brand { color: var(--gold-light); font: 11px 'DM Mono', monospace; letter-spacing: .28em; text-transform: uppercase; white-space: nowrap; }
+  .brand span { color: var(--muted); }
+  .nav-links { display: flex; align-items: center; gap: 28px; color: var(--cream-soft); font: 10px 'DM Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+  .nav-links a { transition: color .25s ease; }
+  .nav-links a:hover { color: var(--gold-light); }
+  .nav-cta, .gold-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; border: 1px solid var(--gold); background: var(--gold); color: var(--black); padding: 14px 20px; font: 10px 'DM Mono', monospace; letter-spacing: .16em; text-transform: uppercase; transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease; }
+  .nav-cta:hover, .gold-button:hover { background: var(--gold-light); border-color: var(--gold-light); transform: translateY(-2px); }
+  .mobile-rail { display: none; }
+
+  .hero { position: relative; overflow: hidden; background: var(--wine); }
+  .hero::before { content: ''; position: absolute; inset: 0; opacity: .4; background-image: radial-gradient(rgba(228,196,123,.28) 1px, transparent 1px); background-size: 28px 28px; mask-image: linear-gradient(to bottom, black, transparent 92%); }
+  .hero::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 78% 40%, rgba(228,196,123,.18), transparent 28%), linear-gradient(90deg, rgba(43,8,13,.75), transparent 60%); pointer-events: none; }
+  .hero-inner { position: relative; z-index: 1; max-width: 1440px; margin: 0 auto; min-height: 760px; display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; gap: 64px; padding: 84px 56px 74px; }
+  .hero-copy { max-width: 700px; }
+  .hero-kicker { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(228,196,123,.42); border-radius: 999px; padding: 9px 14px; color: var(--gold-light); font: 10px 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+  .hero-title { margin: 36px 0 0; max-width: 760px; font: 500 clamp(5.3rem, 10vw, 10.5rem)/.78 'Cormorant Garamond', Georgia, serif; letter-spacing: -.08em; }
+  .hero-title em { display: inline-block; color: var(--gold-light); font-style: italic; }
+  .hero-lead { max-width: 510px; margin: 34px 0 0; border-left: 2px solid var(--gold); padding-left: 18px; color: var(--cream); font: 500 22px/1.35 'Cormorant Garamond', Georgia, serif; }
+  .hero-meta { display: flex; align-items: flex-end; gap: 44px; margin-top: 42px; }
+  .metric-value { color: var(--gold-light); font: 500 50px/.9 'Cormorant Garamond', Georgia, serif; }
+  .metric-label { margin-top: 8px; color: rgba(242,234,220,.66); font: 9px 'DM Mono', monospace; letter-spacing: .18em; text-transform: uppercase; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 42px; }
+  .ghost-button { display: inline-flex; align-items: center; justify-content: center; gap: 12px; border: 1px solid rgba(228,196,123,.6); background: transparent; color: var(--gold-light); padding: 14px 20px; font: 10px 'DM Mono', monospace; letter-spacing: .16em; text-transform: uppercase; transition: background .25s ease, color .25s ease; }
+  .ghost-button:hover { background: rgba(228,196,123,.12); color: var(--cream); }
+  .hero-art { position: relative; min-height: 570px; border: 1px solid rgba(228,196,123,.38); background: var(--black); overflow: hidden; }
+  .hero-art img { width: 100%; height: 100%; min-height: 570px; display: block; object-fit: cover; filter: saturate(.72) contrast(1.08) sepia(.16); }
+  .hero-art::before { content: ''; position: absolute; z-index: 1; inset: 0; background: linear-gradient(180deg, rgba(13,9,10,.08), rgba(13,9,10,.75)); pointer-events: none; }
+  .hero-caption { position: absolute; z-index: 2; inset: auto 24px 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
+  .hero-caption p { margin: 0; }
+  .caption-label { color: var(--gold-light); font: 9px 'DM Mono', monospace; letter-spacing: .2em; text-transform: uppercase; }
+  .caption-title { margin-top: 8px !important; color: var(--cream); font: italic 28px/1 'Cormorant Garamond', Georgia, serif; }
+  .vertical-note { color: var(--gold-light); font: 9px 'DM Mono', monospace; letter-spacing: .18em; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); }
+
+  .section { max-width: 1440px; margin: 0 auto; padding: 116px 56px; }
+  .intro-section { background: var(--black); }
+  .intro-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 90px; align-items: end; }
+  .intro-copy { max-width: 720px; }
+  .intro-lead { margin: 0; color: var(--cream); font: 500 34px/1.12 'Cormorant Garamond', Georgia, serif; }
+  .intro-body { max-width: 620px; margin: 26px 0 0; color: var(--muted); font-size: 15px; line-height: 1.9; }
+  .stat-ribbon { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 46px; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  .stat { padding: 23px 20px 24px 0; }
+  .stat + .stat { border-left: 1px solid var(--hairline); padding-left: 20px; }
+
+  .contestants-section { background: var(--cream); color: var(--black); max-width: none; }
+  .contestants-inner { max-width: 1440px; margin: 0 auto; padding: 116px 56px; }
+  .section-heading-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; padding-bottom: 34px; border-bottom: 1px solid rgba(13,9,10,.2); }
+  .dark-eyebrow { color: var(--wine); }
+  .dark-eyebrow::before { background: var(--wine); }
+  .contestants-summary { max-width: 300px; margin: 0; color: #6e6260; font-size: 14px; line-height: 1.7; }
+  .contestant-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 48px; }
+  .contestant-card { position: relative; display: flex; flex-direction: column; min-height: 560px; border: 1px solid rgba(13,9,10,.16); background: #fbf7ef; overflow: hidden; transition: transform .3s ease, box-shadow .3s ease; }
+  .contestant-card:hover { transform: translateY(-6px); box-shadow: 0 24px 42px rgba(43,8,13,.14); }
+  .contestant-card:nth-child(2) { margin-top: 42px; }
+  .contestant-card:nth-child(3) { margin-top: 84px; }
+  .contestant-image-wrap { position: relative; aspect-ratio: 4 / 4.7; overflow: hidden; background: var(--black-panel); }
+  .contestant-image-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 56%, rgba(13,9,10,.45)); pointer-events: none; }
+  .contestant-image { width: 100%; height: 100%; display: block; object-fit: cover; filter: saturate(.82) contrast(1.04); transition: transform .45s ease, filter .45s ease; }
+  .contestant-card:hover .contestant-image { transform: scale(1.035); filter: saturate(1) contrast(1.06); }
+  .number-badge { position: absolute; z-index: 2; top: 16px; right: 16px; display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid var(--gold-light); border-radius: 50%; background: var(--wine); color: var(--gold-light); font: 16px 'Cormorant Garamond', Georgia, serif; }
+  .contestant-info { display: flex; flex: 1; flex-direction: column; padding: 24px 24px 22px; }
+  .contestant-name { margin: 0; color: var(--wine); font: 600 28px/1 'Cormorant Garamond', Georgia, serif; }
+  .contestant-field { display: grid; gap: 7px; margin-top: 18px; color: #655958; font-size: 12px; line-height: 1.45; }
+  .contestant-quote { margin: 20px 0 0; border-left: 2px solid var(--gold); padding-left: 12px; color: #6f6560; font: italic 16px/1.4 'Cormorant Garamond', Georgia, serif; }
+  .vote-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 24px; }
+  .vote-count { color: var(--wine); font: 500 19px 'Cormorant Garamond', Georgia, serif; }
+  .vote-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; background: var(--wine); color: var(--cream); padding: 12px 15px; font: 10px 'DM Mono', monospace; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; transition: background .25s ease, transform .25s ease; }
+  .vote-button:hover { background: var(--wine-bright); transform: translateY(-2px); }
+  .all-contestants { display: flex; justify-content: center; margin-top: 54px; }
+  .wine-outline { border-color: var(--wine); color: var(--wine); }
+  .wine-outline:hover { background: rgba(93,16,24,.08); color: var(--wine); }
+
+  .leaderboard-section { background: var(--black-soft); border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+  .leaderboard-head { display: grid; grid-template-columns: .9fr 1.1fr; gap: 80px; align-items: end; }
+  .leaderboard-intro { max-width: 430px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.8; }
+  .leaderboard-list { margin-top: 54px; border-top: 1px solid var(--hairline); }
+  .leader-row { display: grid; grid-template-columns: 70px 70px 1fr auto; gap: 18px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--hairline); }
+  .leader-row:first-child { border-color: rgba(228,196,123,.55); background: rgba(93,16,24,.34); }
+  .leader-rank { color: var(--gold-light); font: 42px/1 'Cormorant Garamond', Georgia, serif; }
+  .leader-thumb { width: 56px; height: 56px; border: 1px solid var(--gold); border-radius: 50%; object-fit: cover; }
+  .leader-name { color: var(--cream); font: 500 27px/1 'Cormorant Garamond', Georgia, serif; }
+  .leader-sub { margin-top: 7px; color: var(--muted); font: 10px 'DM Mono', monospace; letter-spacing: .04em; }
+  .leader-votes { color: var(--gold-light); font: 500 28px/1 'Cormorant Garamond', Georgia, serif; text-align: right; }
+  .leader-votes span { display: block; margin-top: 6px; color: var(--muted); font: 9px 'DM Mono', monospace; letter-spacing: .17em; text-transform: uppercase; }
+
+  .about-section { background: var(--cream); color: var(--black); max-width: none; }
+  .about-inner { max-width: 1440px; margin: 0 auto; padding: 116px 56px; }
+  .about-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 90px; align-items: start; }
+  .about-title { color: var(--black); }
+  .about-title em { color: var(--wine); }
+  .about-copy { max-width: 650px; color: #655958; font-size: 16px; line-height: 1.85; }
+  .pillars { display: grid; gap: 12px; margin-top: 38px; }
+  .pillar { display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid rgba(13,9,10,.15); padding: 22px 24px; background: rgba(255,255,255,.32); }
+  .pillar h3 { margin: 0; color: var(--wine); font: 500 28px/1 'Cormorant Garamond', Georgia, serif; }
+  .pillar p { margin: 0; color: #6e6260; font-size: 13px; text-align: right; }
+
+  .footer { background: var(--wine-deep); border-top: 1px solid rgba(228,196,123,.28); }
+  .footer-inner { max-width: 1440px; margin: 0 auto; padding: 70px 56px 26px; }
+  .footer-grid { display: grid; grid-template-columns: 1.2fr .8fr .8fr; gap: 60px; padding-bottom: 62px; }
+  .footer-brand { max-width: 330px; }
+  .footer-brand .brand { display: block; margin-bottom: 18px; }
+  .footer-tagline { margin: 0; color: var(--cream-soft); font: italic 25px/1.15 'Cormorant Garamond', Georgia, serif; }
+  .footer-copy { margin: 18px 0 0; color: rgba(242,234,220,.68); font-size: 13px; line-height: 1.7; }
+  .footer-title { margin: 0 0 18px; color: var(--gold-light); font: 500 18px 'Cormorant Garamond', Georgia, serif; text-transform: uppercase; letter-spacing: .08em; }
+  .footer-links { display: grid; gap: 12px; color: var(--cream-soft); font-size: 13px; }
+  .footer-links a:hover { color: var(--gold-light); }
+  .footer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 20px; border-top: 1px solid rgba(242,234,220,.15); padding-top: 22px; color: rgba(242,234,220,.52); font: 9px 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+
+  @media (max-width: 920px) {
+    .nav-inner { padding: 0 24px; }
+    .nav-links, .nav-cta { display: none; }
+    .mobile-rail { display: flex; gap: 24px; overflow-x: auto; border-top: 1px solid var(--hairline); padding: 12px 24px; color: var(--cream-soft); font: 9px 'DM Mono', monospace; letter-spacing: .14em; text-transform: uppercase; scrollbar-width: none; }
+    .mobile-rail a { flex-shrink: 0; }
+    .hero-inner, .intro-grid, .leaderboard-head, .about-grid { grid-template-columns: 1fr; }
+    .hero-inner { padding: 68px 24px 54px; }
+    .hero-copy { order: 1; }
+    .hero-art { order: 0; min-height: 430px; }
+    .hero-art img { min-height: 430px; }
+    .section, .contestants-inner, .about-inner { padding: 86px 24px; }
+    .intro-grid, .about-grid { gap: 50px; }
+    .contestant-grid { grid-template-columns: repeat(2, 1fr); }
+    .contestant-card:nth-child(2), .contestant-card:nth-child(3) { margin-top: 0; }
+    .footer-inner { padding: 60px 24px 22px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 580px) {
+    .brand { font-size: 9px; letter-spacing: .18em; }
+    .hero-title { font-size: clamp(4.3rem, 20vw, 6rem); }
+    .hero-lead { font-size: 20px; }
+    .hero-meta { gap: 26px; }
+    .hero-actions { align-items: stretch; flex-direction: column; }
+    .hero-actions a { width: 100%; }
+    .section-title { font-size: clamp(4rem, 18vw, 6rem); }
+    .section-heading-row { align-items: flex-start; flex-direction: column; }
+    .stat-ribbon { grid-template-columns: 1fr; }
+    .stat, .stat + .stat { border-left: 0; padding-left: 0; }
+    .stat + .stat { border-top: 1px solid var(--hairline); }
+    .contestant-grid { grid-template-columns: 1fr; }
+    .contestant-card { min-height: 0; }
+    .leader-row { grid-template-columns: 42px 48px 1fr; gap: 10px; }
+    .leader-rank { font-size: 31px; }
+    .leader-thumb { width: 42px; height: 42px; }
+    .leader-name { font-size: 21px; }
+    .leader-sub { font-size: 8px; line-height: 1.35; }
+    .leader-votes { grid-column: 3; text-align: left; font-size: 21px; }
+    .about-grid { gap: 38px; }
+    .pillar { align-items: flex-start; flex-direction: column; }
+    .pillar p { text-align: left; }
+    .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+    .footer-bottom { align-items: flex-start; flex-direction: column; }
+    .night-panel { grid-template-columns: 1fr !important; }
+    .night-image, .night-image img { min-height: 360px !important; }
+    .night-details { padding: 42px 24px !important; }
+    .night-details .detail-row { align-items: flex-start !important; flex-direction: column; gap: 8px !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+</style>
+<div data-kid="1" id="top" style="background:var(--black); color:var(--cream);">
+    <header class="nav" data-kid="1-1">
+        <div class="nav-inner" data-kid="1-1-1">
+            <a class="brand focus-ring" data-kid="1-1-1-1" href="#top">
+                Mr & Miss UI
+                <span data-kid="1-1-1-1-1">
+                    / 2026
+                </span>
+            </a>
+            <nav aria-label="Primary navigation" class="nav-links" data-kid="1-1-1-2">
+                <a class="focus-ring" data-kid="1-1-1-2-1" href="#contestants">
+                    Contestants
+                </a>
+                <a class="focus-ring" data-kid="1-1-1-2-2" href="#leaderboard">
+                    Leaderboard
+                </a>
+                <a class="focus-ring" data-kid="1-1-1-2-3" href="#about">
+                    About
+                </a>
+                <a class="focus-ring" data-kid="1-1-1-2-4" href="#the-night">
+                    The Night
+                </a>
+            </nav>
+            <a class="nav-cta focus-ring" data-kid="1-1-1-3" href="#contestants">
+                Vote now
+                <span aria-hidden="true" data-kid="1-1-1-3-1">
+                    ↘
+                </span>
+            </a>
+        </div>
+        <nav aria-label="Mobile navigation" class="mobile-rail" data-kid="1-1-2">
+            <a class="focus-ring" data-kid="1-1-2-1" href="#contestants">
+                Contestants
+            </a>
+            <a class="focus-ring" data-kid="1-1-2-2" href="#leaderboard">
+                Leaderboard
+            </a>
+            <a class="focus-ring" data-kid="1-1-2-3" href="#about">
+                About
+            </a>
+            <a class="focus-ring" data-kid="1-1-2-4" href="#the-night">
+                The Night
+            </a>
+        </nav>
+    </header>
+    <main data-kid="1-2">
+        <section class="hero" data-kid="1-2-1" id="hero">
+            <div class="hero-inner" data-kid="1-2-1-1">
+                <div class="hero-copy" data-kid="1-2-1-1-1">
+                    <span class="hero-kicker" data-kid="1-2-1-1-1-1">
+                        People's choice · voting edition
+                    </span>
+                    <h1 class="hero-title" data-kid="1-2-1-1-1-2">
+                        Mr &
+                        <br data-kid="1-2-1-1-1-2-1" data-name="hero title break">
+                        <em data-kid="1-2-1-1-1-2-2">
+                            Miss
+                        </em>
+                        <br data-kid="1-2-1-1-1-2-3" data-name="hero title second break">
+                        Unibadan.
+                    </h1>
+                    <p class="hero-lead" data-kid="1-2-1-1-1-3">
+                        Where brilliance meets grace — cast your vote for the students carrying the identity of UI forward.
+                    </p>
+                    <div aria-label="Voting information" class="hero-meta" data-kid="1-2-1-1-1-4" data-name="voting information metrics container">
+                        <div data-kid="1-2-1-1-1-4-1" data-name="contestants metric container">
+                            <div class="metric-value" data-kid="1-2-1-1-1-4-1-1" data-name="contestants metric value">
+                                21
+                            </div>
+                            <div class="metric-label" data-kid="1-2-1-1-1-4-1-2" data-name="contestants metric label">
+                                Contestants
+                            </div>
+                        </div>
+                        <div data-kid="1-2-1-1-1-4-2" data-name="days left metric container">
+                            <div class="metric-value" data-kid="1-2-1-1-1-4-2-1" data-name="days left metric value">
+                                15
+                            </div>
+                            <div class="metric-label" data-kid="1-2-1-1-1-4-2-2" data-name="days left metric label">
+                                Days left
+                            </div>
+                        </div>
+                        <div data-kid="1-2-1-1-1-4-3" data-name="crown night metric container">
+                            <div class="metric-value" data-kid="1-2-1-1-1-4-3-1" data-name="crown night metric value">
+                                01
+                            </div>
+                            <div class="metric-label" data-kid="1-2-1-1-1-4-3-2" data-name="crown night metric label">
+                                Crown night
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-actions" data-kid="1-2-1-1-1-5">
+                        <a class="gold-button focus-ring" data-kid="1-2-1-1-1-5-1" href="#contestants">
+                            Meet the contestants
+                            <span aria-hidden="true" data-kid="1-2-1-1-1-5-1-1">
+                                ↘
+                            </span>
+                        </a>
+                        <a class="ghost-button focus-ring" data-kid="1-2-1-1-1-5-2" href="#leaderboard">
+                            View live votes
+                            <span aria-hidden="true" data-kid="1-2-1-1-1-5-2-1">
+                                ↗
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-art" data-kid="1-2-1-1-2">
+                    <img alt="Mr and Miss Unibadan stage and crown night poster" data-kid="1-2-1-1-2-1" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4695.PNG">
+                    <div class="hero-caption" data-kid="1-2-1-1-2-2">
+                        <div data-kid="1-2-1-1-2-2-1">
+                            <p class="caption-label" data-kid="1-2-1-1-2-2-1-1">
+                                A ceremony of becoming
+                            </p>
+                            <p class="caption-title" data-kid="1-2-1-1-2-2-1-2">
+                                Vote for the story you believe in.
+                            </p>
+                        </div>
+                        <span class="vertical-note" data-kid="1-2-1-1-2-2-2">
+                            Edition 01 / 2026
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section intro-section" data-kid="1-2-2" id="calling">
+            <div class="intro-grid" data-kid="1-2-2-1">
+                <div data-kid="1-2-2-1-1">
+                    <p class="eyebrow" data-kid="1-2-2-1-1-1">
+                        01 / The calling
+                    </p>
+                    <h2 class="section-title" data-kid="1-2-2-1-1-2" style="margin-top:34px;">
+                        A platform
+                        <br data-kid="1-2-2-1-1-2-1" data-name="intro title break">
+                        <em data-kid="1-2-2-1-1-2-2">
+                            with purpose.
+                        </em>
+                    </h2>
+                </div>
+                <div class="intro-copy" data-kid="1-2-2-1-2">
+                    <p class="intro-lead" data-kid="1-2-2-1-2-1">
+                        For over 15 years, Mr. & Miss UI has stood as one of the most celebrated pageantry platforms within the University of Ibadan community.
+                    </p>
+                    <p class="intro-body" data-kid="1-2-2-1-2-2">
+                        More than a beauty pageant, it is a platform for discovering students who embody excellence, confidence, intelligence, creativity, leadership, and social influence. Your vote gives that story a visible place.
+                    </p>
+                    <div class="stat-ribbon" data-kid="1-2-2-1-2-3">
+                        <div class="stat" data-kid="1-2-2-1-2-3-1">
+                            <div class="metric-value" data-kid="1-2-2-1-2-3-1-1">
+                                01
+                            </div>
+                            <div class="metric-label" data-kid="1-2-2-1-2-3-1-2">
+                                University
+                            </div>
+                        </div>
+                        <div class="stat" data-kid="1-2-2-1-2-3-2">
+                            <div class="metric-value" data-kid="1-2-2-1-2-3-2-1">
+                                03
+                            </div>
+                            <div class="metric-label" data-kid="1-2-2-1-2-3-2-2">
+                                Crowns
+                            </div>
+                        </div>
+                        <div class="stat" data-kid="1-2-2-1-2-3-3">
+                            <div class="metric-value" data-kid="1-2-2-1-2-3-3-1">
+                                15
+                            </div>
+                            <div class="metric-label" data-kid="1-2-2-1-2-3-3-2">
+                                Years of legacy
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="contestants-section" data-kid="1-2-3" id="contestants">
+            <div class="contestants-inner" data-kid="1-2-3-1">
+                <div class="section-heading-row" data-kid="1-2-3-1-1">
+                    <div data-kid="1-2-3-1-1-1">
+                        <p class="eyebrow dark-eyebrow" data-kid="1-2-3-1-1-1-1">
+                            02 / The candidates
+                        </p>
+                        <h2 class="section-title about-title" data-kid="1-2-3-1-1-1-2" style="margin-top:32px;">
+                            Meet the
+                            <br data-kid="1-2-3-1-1-1-2-1" data-name="contestants title break">
+                            <em data-kid="1-2-3-1-1-1-2-2">
+                                contenders.
+                            </em>
+                        </h2>
+                    </div>
+                    <p class="contestants-summary" data-kid="1-2-3-1-1-2">
+                        Every portrait carries a different discipline, story, and kind of presence. Choose the candidate whose journey deserves your vote.
+                    </p>
+                </div>
+                <div class="contestant-grid" data-kid="1-2-3-1-2">
+                    <article class="contestant-card" data-kid="1-2-3-1-2-1" data-name="contestant card 1">
+                        <div class="contestant-image-wrap" data-kid="1-2-3-1-2-1-1">
+                            <span class="number-badge" data-kid="1-2-3-1-2-1-1-1">
+                                #01
+                            </span>
+                            <img alt="Contestant portrait for Olubaseyi Damilare" class="contestant-image" data-kid="1-2-3-1-2-1-1-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4798.PNG">
+                        </div>
+                        <div class="contestant-info" data-kid="1-2-3-1-2-1-2">
+                            <h3 class="contestant-name" data-kid="1-2-3-1-2-1-2-1">
+                                Olubaseyi Damilare
+                            </h3>
+                            <div class="contestant-field" data-kid="1-2-3-1-2-1-2-2">
+                                <span data-kid="1-2-3-1-2-1-2-2-1">
+                                    Mathematics · 400 level
+                                </span>
+                                <span data-kid="1-2-3-1-2-1-2-2-2">
+                                    Mr UI 2023 / 2024
+                                </span>
+                            </div>
+                            <p class="contestant-quote" data-kid="1-2-3-1-2-1-2-3">
+                                “A standard carried with grace, intelligence, and presence.”
+                            </p>
+                            <div class="vote-row" data-kid="1-2-3-1-2-1-2-4">
+                                <span class="vote-count" data-kid="1-2-3-1-2-1-2-4-1" data-name="contestant 1 vote count">
+                                    6,000 votes
+                                </span>
+                                <a class="vote-button focus-ring" data-kid="1-2-3-1-2-1-2-4-2" href="#leaderboard">
+                                    Vote now
+                                    <span aria-hidden="true" data-kid="1-2-3-1-2-1-2-4-2-1">
+                                        ♥
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="contestant-card" data-kid="1-2-3-1-2-2" data-name="contestant card 2">
+                        <div class="contestant-image-wrap" data-kid="1-2-3-1-2-2-1">
+                            <span class="number-badge" data-kid="1-2-3-1-2-2-1-1">
+                                #02
+                            </span>
+                            <img alt="Contestant portrait for Adegbenro Daniel" class="contestant-image" data-kid="1-2-3-1-2-2-1-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4796.PNG">
+                        </div>
+                        <div class="contestant-info" data-kid="1-2-3-1-2-2-2">
+                            <h3 class="contestant-name" data-kid="1-2-3-1-2-2-2-1">
+                                Adegbenro Daniel
+                            </h3>
+                            <div class="contestant-field" data-kid="1-2-3-1-2-2-2-2">
+                                <span data-kid="1-2-3-1-2-2-2-2-1">
+                                    European Studies · 300 level
+                                </span>
+                                <span data-kid="1-2-3-1-2-2-2-2-2">
+                                    Mr UI 2022 / 2023
+                                </span>
+                            </div>
+                            <p class="contestant-quote" data-kid="1-2-3-1-2-2-2-3">
+                                “Confidence is the quiet work behind every visible crown.”
+                            </p>
+                            <div class="vote-row" data-kid="1-2-3-1-2-2-2-4">
+                                <span class="vote-count" data-kid="1-2-3-1-2-2-2-4-1" data-name="contestant 2 vote count">
+                                    5,619 votes
+                                </span>
+                                <a class="vote-button focus-ring" data-kid="1-2-3-1-2-2-2-4-2" href="#leaderboard">
+                                    Vote now
+                                    <span aria-hidden="true" data-kid="1-2-3-1-2-2-2-4-2-1">
+                                        ♥
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="contestant-card" data-kid="1-2-3-1-2-3" data-name="contestant card 3">
+                        <div class="contestant-image-wrap" data-kid="1-2-3-1-2-3-1">
+                            <span class="number-badge" data-kid="1-2-3-1-2-3-1-1">
+                                #03
+                            </span>
+                            <img alt="Contestant portrait for Anthony Jasper Laris" class="contestant-image" data-kid="1-2-3-1-2-3-1-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4793.PNG">
+                        </div>
+                        <div class="contestant-info" data-kid="1-2-3-1-2-3-2">
+                            <h3 class="contestant-name" data-kid="1-2-3-1-2-3-2-1">
+                                Anthony Jasper Laris
+                            </h3>
+                            <div class="contestant-field" data-kid="1-2-3-1-2-3-2-2">
+                                <span data-kid="1-2-3-1-2-3-2-2-1">
+                                    Mathematics · 400 level
+                                </span>
+                                <span data-kid="1-2-3-1-2-3-2-2-2">
+                                    Mr UI 2021 / 2022
+                                </span>
+                            </div>
+                            <p class="contestant-quote" data-kid="1-2-3-1-2-3-2-3">
+                                “To represent is to turn personal excellence into shared pride.”
+                            </p>
+                            <div class="vote-row" data-kid="1-2-3-1-2-3-2-4">
+                                <span class="vote-count" data-kid="1-2-3-1-2-3-2-4-1" data-name="contestant 3 vote count">
+                                    5,533 votes
+                                </span>
+                                <a class="vote-button focus-ring" data-kid="1-2-3-1-2-3-2-4-2" href="#leaderboard">
+                                    Vote now
+                                    <span aria-hidden="true" data-kid="1-2-3-1-2-3-2-4-2-1">
+                                        ♥
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="contestant-card" data-kid="1-2-3-1-2-4" data-name="contestant card 4">
+                        <div class="contestant-image-wrap" data-kid="1-2-3-1-2-4-1">
+                            <span class="number-badge" data-kid="1-2-3-1-2-4-1-1">
+                                #04
+                            </span>
+                            <img alt="Contestant portrait from the Mr and Miss UI archive" class="contestant-image" data-kid="1-2-3-1-2-4-1-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/image7.png">
+                        </div>
+                        <div class="contestant-info" data-kid="1-2-3-1-2-4-2">
+                            <h3 class="contestant-name" data-kid="1-2-3-1-2-4-2-1">
+                                Tobiloba Oluwole
+                            </h3>
+                            <div class="contestant-field" data-kid="1-2-3-1-2-4-2-2">
+                                <span data-kid="1-2-3-1-2-4-2-2-1">
+                                    Theater Arts · 300 level
+                                </span>
+                                <span data-kid="1-2-3-1-2-4-2-2-2">
+                                    Miss UI 2023 / 2024
+                                </span>
+                            </div>
+                            <p class="contestant-quote" data-kid="1-2-3-1-2-4-2-3">
+                                “A story of discipline, expression, and courageous becoming.”
+                            </p>
+                            <div class="vote-row" data-kid="1-2-3-1-2-4-2-4">
+                                <span class="vote-count" data-kid="1-2-3-1-2-4-2-4-1" data-name="contestant 4 vote count">
+                                    3,448 votes
+                                </span>
+                                <a class="vote-button focus-ring" data-kid="1-2-3-1-2-4-2-4-2" href="#leaderboard">
+                                    Vote now
+                                    <span aria-hidden="true" data-kid="1-2-3-1-2-4-2-4-2-1">
+                                        ♥
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="contestant-card" data-kid="1-2-3-1-2-5" data-name="contestant card 5">
+                        <div class="contestant-image-wrap" data-kid="1-2-3-1-2-5-1">
+                            <span class="number-badge" data-kid="1-2-3-1-2-5-1-1">
+                                #05
+                            </span>
+                            <img alt="Contestant portrait from the Mr and Miss UI archive" class="contestant-image" data-kid="1-2-3-1-2-5-1-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4752.PNG">
+                        </div>
+                        <div class="contestant-info" data-kid="1-2-3-1-2-5-2">
+                            <h3 class="contestant-name" data-kid="1-2-3-1-2-5-2-1">
+                                Onuoha Marvellous
+                            </h3>
+                            <div class="contestant-field" data-kid="1-2-3-1-2-5-2-2">
+                                <span data-kid="1-2-3-1-2-5-2-2-1">
+                                    Special Education · 300 level
+                                </span>
+                                <span data-kid="1-2-3-1-2-5-2-2-2">
+                                    Miss UI 2022 / 2023
+                                </span>
+                            </div>
+                            <p class="contestant-quote" data-kid="1-2-3-1-2-5-2-3">
+                                “Make presence matter — then leave something worthy behind.”
+                            </p>
+                            <div class="vote-row" data-kid="1-2-3-1-2-5-2-4">
+                                <span class="vote-count" data-kid="1-2-3-1-2-5-2-4-1" data-name="contestant 5 vote count">
+                                    3,210 votes
+                                </span>
+                                <a class="vote-button focus-ring" data-kid="1-2-3-1-2-5-2-4-2" href="#leaderboard">
+                                    Vote now
+                                    <span aria-hidden="true" data-kid="1-2-3-1-2-5-2-4-2-1">
+                                        ♥
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="contestant-card" data-kid="1-2-3-1-2-6" data-name="contestant card 6 (empty)">
+                        <div class="contestant-image-wrap" data-kid="1-2-3-1-2-6-1">
+                            <span class="number-badge" data-kid="1-2-3-1-2-6-1-1">
+                                #06
+                            </span>
+                            <img alt="Contestant portrait from the Mr and Miss UI archive" class="contestant-image" data-kid="1-2-3-1-2-6-1-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4757.PNG">
+                        </div>
+                        <div class="contestant-info" data-kid="1-2-3-1-2-6-2">
+                            <h3 class="contestant-name" data-kid="1-2-3-1-2-6-2-1">
+                                The next crown
+                            </h3>
+                            <div class="contestant-field" data-kid="1-2-3-1-2-6-2-2">
+                                <span data-kid="1-2-3-1-2-6-2-2-1">
+                                    Contestant profile
+                                </span>
+                                <span data-kid="1-2-3-1-2-6-2-2-2">
+                                    Portrait slot / 2026 edition
+                                </span>
+                            </div>
+                            <p class="contestant-quote" data-kid="1-2-3-1-2-6-2-3">
+                                “Your story begins here.”
+                            </p>
+                            <div class="vote-row" data-kid="1-2-3-1-2-6-2-4">
+                                <span class="vote-count" data-kid="1-2-3-1-2-6-2-4-1" data-name="contestant 6 vote status">
+                                    Coming soon
+                                </span>
+                                <a class="vote-button focus-ring" data-kid="1-2-3-1-2-6-2-4-2" href="#top">
+                                    View profile
+                                    <span aria-hidden="true" data-kid="1-2-3-1-2-6-2-4-2-1">
+                                        ↗
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="all-contestants" data-kid="1-2-3-1-3">
+                    <a class="ghost-button wine-outline focus-ring" data-kid="1-2-3-1-3-1" href="#contestants">
+                        View all contestants
+                        <span aria-hidden="true" data-kid="1-2-3-1-3-1-1">
+                            ⌄
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class="section leaderboard-section" data-kid="1-2-4" id="leaderboard">
+            <div class="leaderboard-head" data-kid="1-2-4-1">
+                <div data-kid="1-2-4-1-1">
+                    <p class="eyebrow" data-kid="1-2-4-1-1-1">
+                        03 / The pulse
+                    </p>
+                    <h2 class="section-title" data-kid="1-2-4-1-1-2" style="margin-top:32px;">
+                        Live
+                        <br data-kid="1-2-4-1-1-2-1" data-name="leaderboard title break">
+                        <em data-kid="1-2-4-1-1-2-2">
+                            leaderboard.
+                        </em>
+                    </h2>
+                </div>
+                <p class="leaderboard-intro" data-kid="1-2-4-1-2">
+                    The numbers move as the community votes. Return often, support your candidate, and watch the race for the crown unfold in real time.
+                </p>
+            </div>
+            <div class="leaderboard-list" data-kid="1-2-4-2">
+                <div class="leader-row" data-kid="1-2-4-2-1">
+                    <span class="leader-rank" data-kid="1-2-4-2-1-1">
+                        #1
+                    </span>
+                    <img alt="Olubaseyi Damilare thumbnail" class="leader-thumb" data-kid="1-2-4-2-1-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4798.PNG">
+                    <div data-kid="1-2-4-2-1-3">
+                        <div class="leader-name" data-kid="1-2-4-2-1-3-1">
+                            Olubaseyi Damilare
+                        </div>
+                        <div class="leader-sub" data-kid="1-2-4-2-1-3-2">
+                            Mathematics · University of Ibadan
+                        </div>
+                    </div>
+                    <div class="leader-votes" data-kid="1-2-4-2-1-4" data-name="leaderboard row 1 vote count">
+                        6,000
+                        <span data-kid="1-2-4-2-1-4-1">
+                            votes
+                        </span>
+                    </div>
+                </div>
+                <div class="leader-row" data-kid="1-2-4-2-2">
+                    <span class="leader-rank" data-kid="1-2-4-2-2-1">
+                        #2
+                    </span>
+                    <img alt="Adegbenro Daniel thumbnail" class="leader-thumb" data-kid="1-2-4-2-2-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4796.PNG">
+                    <div data-kid="1-2-4-2-2-3">
+                        <div class="leader-name" data-kid="1-2-4-2-2-3-1">
+                            Adegbenro Daniel
+                        </div>
+                        <div class="leader-sub" data-kid="1-2-4-2-2-3-2">
+                            European Studies · University of Ibadan
+                        </div>
+                    </div>
+                    <div class="leader-votes" data-kid="1-2-4-2-2-4" data-name="leaderboard row 2 vote count">
+                        5,619
+                        <span data-kid="1-2-4-2-2-4-1">
+                            votes
+                        </span>
+                    </div>
+                </div>
+                <div class="leader-row" data-kid="1-2-4-2-3">
+                    <span class="leader-rank" data-kid="1-2-4-2-3-1">
+                        #3
+                    </span>
+                    <img alt="Anthony Jasper Laris thumbnail" class="leader-thumb" data-kid="1-2-4-2-3-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4793.PNG">
+                    <div data-kid="1-2-4-2-3-3">
+                        <div class="leader-name" data-kid="1-2-4-2-3-3-1">
+                            Anthony Jasper Laris
+                        </div>
+                        <div class="leader-sub" data-kid="1-2-4-2-3-3-2">
+                            Mathematics · University of Ibadan
+                        </div>
+                    </div>
+                    <div class="leader-votes" data-kid="1-2-4-2-3-4" data-name="leaderboard row 3 vote count">
+                        5,533
+                        <span data-kid="1-2-4-2-3-4-1">
+                            votes
+                        </span>
+                    </div>
+                </div>
+                <div class="leader-row" data-kid="1-2-4-2-4">
+                    <span class="leader-rank" data-kid="1-2-4-2-4-1">
+                        #4
+                    </span>
+                    <img alt="Tobiloba Oluwole thumbnail" class="leader-thumb" data-kid="1-2-4-2-4-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/image7.png">
+                    <div data-kid="1-2-4-2-4-3">
+                        <div class="leader-name" data-kid="1-2-4-2-4-3-1">
+                            Tobiloba Oluwole
+                        </div>
+                        <div class="leader-sub" data-kid="1-2-4-2-4-3-2">
+                            Theater Arts · University of Ibadan
+                        </div>
+                    </div>
+                    <div class="leader-votes" data-kid="1-2-4-2-4-4" data-name="leaderboard row 4 vote count">
+                        3,448
+                        <span data-kid="1-2-4-2-4-4-1">
+                            votes
+                        </span>
+                    </div>
+                </div>
+                <div class="leader-row" data-kid="1-2-4-2-5">
+                    <span class="leader-rank" data-kid="1-2-4-2-5-1">
+                        #5
+                    </span>
+                    <img alt="Onuoha Marvellous thumbnail" class="leader-thumb" data-kid="1-2-4-2-5-2" decoding="async" loading="lazy" src="/api/local/images/public/Images-Carousels/IMG_4752.PNG">
+                    <div data-kid="1-2-4-2-5-3">
+                        <div class="leader-name" data-kid="1-2-4-2-5-3-1">
+                            Onuoha Marvellous
+                        </div>
+                        <div class="leader-sub" data-kid="1-2-4-2-5-3-2">
+                            Special Education · University of Ibadan
+                        </div>
+                    </div>
+                    <div class="leader-votes" data-kid="1-2-4-2-5-4" data-name="leaderboard row 5 vote count">
+                        3,210
+                        <span data-kid="1-2-4-2-5-4-1">
+                            votes
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="about-section" data-kid="1-2-5" id="about">
+            <div class="about-inner" data-kid="1-2-5-1">
+                <div class="about-grid" data-kid="1-2-5-1-1">
+                    <div data-kid="1-2-5-1-1-1">
+                        <p class="eyebrow dark-eyebrow" data-kid="1-2-5-1-1-1-1">
+                            04 / The platform
+                        </p>
+                        <h2 class="section-title about-title" data-kid="1-2-5-1-1-1-2" style="margin-top:32px;">
+                            Beyond
+                            <br data-kid="1-2-5-1-1-1-2-1" data-name="about title break">
+                            <em data-kid="1-2-5-1-1-1-2-2">
+                                the crown.
+                            </em>
+                        </h2>
+                    </div>
+                    <div data-kid="1-2-5-1-1-2">
+                        <p class="about-copy" data-kid="1-2-5-1-1-2-1">
+                            Mr & Miss Unibadan is a ceremonial platform for students who carry excellence beyond the stage. It celebrates confidence, creativity, leadership, and the responsibility of representing the University of Ibadan with distinction.
+                        </p>
+                        <div class="pillars" data-kid="1-2-5-1-1-2-2">
+                            <div class="pillar" data-kid="1-2-5-1-1-2-2-1">
+                                <h3 data-kid="1-2-5-1-1-2-2-1-1">
+                                    Advocacy
+                                </h3>
+                                <p data-kid="1-2-5-1-1-2-2-1-2">
+                                    Raising voices for causes that matter.
+                                </p>
+                            </div>
+                            <div class="pillar" data-kid="1-2-5-1-1-2-2-2">
+                                <h3 data-kid="1-2-5-1-1-2-2-2-1">
+                                    Leadership
+                                </h3>
+                                <p data-kid="1-2-5-1-1-2-2-2-2">
+                                    Shaping the next generation of UI leaders.
+                                </p>
+                            </div>
+                            <div class="pillar" data-kid="1-2-5-1-1-2-2-3">
+                                <h3 data-kid="1-2-5-1-1-2-2-3-1">
+                                    Legacy
+                                </h3>
+                                <p data-kid="1-2-5-1-1-2-2-3-2">
+                                    Building a lasting impact beyond the crown.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section" data-kid="1-2-6" id="the-night" style="background:var(--black);">
+            <div class="night-panel" data-kid="1-2-6-1" data-name="grand night content container" style="display:grid;grid-template-columns:.86fr 1.14fr;gap:56px;align-items:center;border:1px solid rgba(197,161,91,.62);background:var(--black-panel);padding:0;overflow:hidden;">
+                <div class="night-image" data-kid="1-2-6-1-1" data-name="grand night image wrapper" style="position:relative;min-height:500px;overflow:hidden;">
+                    <img alt="Stage curtains prepared for the Mr and Miss Unibadan grand night" data-kid="1-2-6-1-1-1" data-name="grand night image" decoding="async" loading="lazy" src="/api/local/images/public/image0.jpeg" style="width:100%;height:100%;min-height:500px;display:block;object-fit:cover;filter:saturate(.68) sepia(.15) contrast(1.08);">
+                    <div data-kid="1-2-6-1-1-2" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,9,10,.06),rgba(13,9,10,.62));">
+                    </div>
+                    <p class="mono" data-kid="1-2-6-1-1-3" style="position:absolute;left:24px;bottom:22px;margin:0;color:var(--gold-light);font-size:9px;letter-spacing:.18em;text-transform:uppercase;">
+                        05 / An invitation to the night
+                    </p>
+                </div>
+                <div class="night-details" data-kid="1-2-6-1-2" data-name="grand night text details container" style="padding:54px 58px;">
+                    <p class="eyebrow" data-kid="1-2-6-1-2-1">
+                        The legacy edition
+                    </p>
+                    <h2 class="section-title" data-kid="1-2-6-1-2-2" style="margin-top:30px;font-size:clamp(4rem,6vw,7rem);">
+                        The Grand
+                        <br data-kid="1-2-6-1-2-2-1" data-name="grand night title break">
+                        <em data-kid="1-2-6-1-2-2-2">
+                            Night.
+                        </em>
+                    </h2>
+                    <p data-kid="1-2-6-1-2-3" style="max-width:520px;margin:28px 0 0;color:var(--cream-soft);font-size:15px;line-height:1.8;">
+                        The 2026 edition marks another chapter of excellence, influence, elegance, and unforgettable legacy within the University of Ibadan community.
+                    </p>
+                    <div data-kid="1-2-6-1-2-4" style="margin-top:34px;border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);">
+                        <div class="detail-row" data-kid="1-2-6-1-2-4-1" data-name="grand night event detail row" style="display:flex;justify-content:space-between;gap:20px;padding:17px 0;border-bottom:1px solid var(--hairline);">
+                            <span class="mono" data-kid="1-2-6-1-2-4-1-1" style="color:var(--muted);font-size:9px;letter-spacing:.18em;text-transform:uppercase;">
+                                Event
+                            </span>
+                            <span class="display" data-kid="1-2-6-1-2-4-1-2" style="font-size:22px;">
+                                Mr & Miss Unibadan 2026
+                            </span>
+                        </div>
+                        <div class="detail-row" data-kid="1-2-6-1-2-4-2" data-name="grand night venue info row" style="display:flex;justify-content:space-between;gap:20px;padding:17px 0;border-bottom:1px solid var(--hairline);">
+                            <span class="mono" data-kid="1-2-6-1-2-4-2-1" style="color:var(--muted);font-size:9px;letter-spacing:.18em;text-transform:uppercase;">
+                                Venue
+                            </span>
+                            <span class="display" data-kid="1-2-6-1-2-4-2-2" style="font-size:22px;">
+                                University of Ibadan
+                            </span>
+                        </div>
+                        <div class="detail-row" data-kid="1-2-6-1-2-4-3" data-name="grand night info row edition" style="display:flex;justify-content:space-between;gap:20px;padding:17px 0;">
+                            <span class="mono" data-kid="1-2-6-1-2-4-3-1" style="color:var(--muted);font-size:9px;letter-spacing:.18em;text-transform:uppercase;">
+                                Edition
+                            </span>
+                            <span class="display" data-kid="1-2-6-1-2-4-3-2" style="font-size:22px;">
+                                2026 / Crystal Excellence
+                            </span>
+                        </div>
+                    </div>
+                    <a class="gold-button focus-ring" data-kid="1-2-6-1-2-5" href="#top" style="margin-top:34px;">
+                        Stay informed
+                        <span aria-hidden="true" data-kid="1-2-6-1-2-5-1">
+                            ↗
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="footer" data-kid="1-3">
+        <div class="footer-inner" data-kid="1-3-1">
+            <div class="footer-grid" data-kid="1-3-1-1">
+                <div class="footer-brand" data-kid="1-3-1-1-1">
+                    <span class="brand" data-kid="1-3-1-1-1-1">
+                        Unibadan
+                        <span data-kid="1-3-1-1-1-1-1">
+                            / 2026
+                        </span>
+                    </span>
+                    <p class="footer-tagline" data-kid="1-3-1-1-1-2">
+                        Where the brilliant find their balance.
+                    </p>
+                    <p class="footer-copy" data-kid="1-3-1-1-1-3">
+                        A ceremonial voting platform for the students carrying the identity and excellence of UI forward.
+                    </p>
+                </div>
+                <div data-kid="1-3-1-1-2">
+                    <h3 class="footer-title" data-kid="1-3-1-1-2-1">
+                        Explore
+                    </h3>
+                    <div class="footer-links" data-kid="1-3-1-1-2-2">
+                        <a data-kid="1-3-1-1-2-2-1" href="#contestants">
+                            Contestants
+                        </a>
+                        <a data-kid="1-3-1-1-2-2-2" href="#leaderboard">
+                            Leaderboard
+                        </a>
+                        <a data-kid="1-3-1-1-2-2-3" href="#about">
+                            About the platform
+                        </a>
+                        <a data-kid="1-3-1-1-2-2-4" href="#the-night">
+                            The Grand Night
+                        </a>
+                    </div>
+                </div>
+                <div data-kid="1-3-1-1-3">
+                    <h3 class="footer-title" data-kid="1-3-1-1-3-1">
+                        Contact
+                    </h3>
+                    <div class="footer-links" data-kid="1-3-1-1-3-2">
+                        <a data-kid="1-3-1-1-3-2-1" href="#top">
+                            Instagram / @mrandmissui
+                        </a>
+                        <a data-kid="1-3-1-1-3-2-2" href="#top">
+                            University of Ibadan, Nigeria
+                        </a>
+                        <a data-kid="1-3-1-1-3-2-3" href="#top">
+                            Get in touch ↗
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom" data-kid="1-3-1-2">
+                <span data-kid="1-3-1-2-1">
+                    © 2026 Mr & Miss Unibadan / University of Ibadan
+                </span>
+                <span data-kid="1-3-1-2-2">
+                    People's choice voting edition
+                </span>
+            </div>
+        </div>
+    </footer>
+</div>
+</div>
+</body></html>
