@@ -100,10 +100,10 @@ function VotePageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading ballot...</p>
+      <div className="ballot-status">
+        <div className="ballot-status-panel">
+          <div className="ballot-spinner" role="status" aria-label="Loading ballot" />
+          <p className="ballot-status-copy">Loading ballot...</p>
         </div>
       </div>
     );
@@ -111,20 +111,15 @@ function VotePageContent() {
 
   if (!tokenValid) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50 px-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <div className="mb-4">
-            <div className="text-4xl mb-2">❌</div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Invalid Voting Link</h1>
-          </div>
-          <p className="text-gray-600 mb-6">
+      <div className="ballot-status">
+        <div className="ballot-status-panel">
+          <p className="eyebrow">Voting link</p>
+          <h1 className="ballot-status-title">Invalid link</h1>
+          <p className="ballot-status-copy">
             {error || "This voting link is invalid, expired, or has already been used."}
           </p>
-          <a
-            href="/"
-            className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
-          >
-            Return to Home
+          <a href="/" className="gold-button focus-ring ballot-status-action">
+            Return to Home <span aria-hidden="true">↗</span>
           </a>
         </div>
       </div>
@@ -133,20 +128,15 @@ function VotePageContent() {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50 px-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-          <div className="mb-4">
-            <div className="text-5xl mb-2">🎉</div>
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">Vote Recorded!</h1>
-          </div>
-          <p className="text-gray-600 mb-6">
+      <div className="ballot-status">
+        <div className="ballot-status-panel">
+          <p className="eyebrow">Confirmed</p>
+          <h1 className="ballot-status-title">Vote recorded</h1>
+          <p className="ballot-status-copy">
             Thank you for voting! Your vote has been successfully recorded and cannot be changed.
           </p>
-          <a
-            href="/"
-            className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
-          >
-            Return to Home
+          <a href="/" className="gold-button focus-ring ballot-status-action">
+            Return to Home <span aria-hidden="true">↗</span>
           </a>
         </div>
       </div>
@@ -154,97 +144,92 @@ function VotePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-center mb-2">🎭 Mr & Miss Unibadan</h1>
-          <p className="text-center text-gray-600 mb-8">Cast your vote now</p>
+    <div className="ballot-page">
+      <div className="ballot-panel">
+        <div className="ballot-head">
+          <p className="eyebrow">Your ballot</p>
+          <h1 className="ballot-title">
+            Mr &amp; <em>Miss</em> Unibadan
+          </h1>
+          <p className="ballot-head-copy">
+            Select one Mr candidate and one Miss candidate, then submit. Once
+            recorded, your vote cannot be changed.
+          </p>
+        </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              {error}
-            </div>
-          )}
+        {error && <div className="ballot-error">{error}</div>}
 
-          <div className="grid md:grid-cols-2 gap-8 mb-8">
-            {/* Mr Candidates */}
-            <div>
-              <h2 className="text-xl font-bold mb-4 text-center">👨 Mr Unibadan</h2>
-              <div className="space-y-3">
-                {candidates.mr.map((candidate) => (
-                  <button
-                    key={candidate.id}
-                    onClick={() => setSelectedMr(candidate.id)}
-                    className={`w-full p-4 rounded-lg border-2 transition cursor-pointer text-left ${
-                      selectedMr === candidate.id
-                        ? "border-indigo-600 bg-indigo-50"
-                        : "border-gray-200 bg-gray-50 hover:border-indigo-300"
-                    }`}
-                  >
-                    {candidate.photo_url && (
-                      <img
-                        src={candidate.photo_url}
-                        alt={candidate.name}
-                        className="w-full h-48 object-cover rounded mb-2"
-                      />
-                    )}
-                    <p className="font-semibold">{candidate.name}</p>
-                    {selectedMr === candidate.id && (
-                      <p className="text-indigo-600 text-sm mt-1">✓ Selected</p>
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Miss Candidates */}
-            <div>
-              <h2 className="text-xl font-bold mb-4 text-center">👩 Miss Unibadan</h2>
-              <div className="space-y-3">
-                {candidates.miss.map((candidate) => (
-                  <button
-                    key={candidate.id}
-                    onClick={() => setSelectedMiss(candidate.id)}
-                    className={`w-full p-4 rounded-lg border-2 transition cursor-pointer text-left ${
-                      selectedMiss === candidate.id
-                        ? "border-indigo-600 bg-indigo-50"
-                        : "border-gray-200 bg-gray-50 hover:border-indigo-300"
-                    }`}
-                  >
-                    {candidate.photo_url && (
-                      <img
-                        src={candidate.photo_url}
-                        alt={candidate.name}
-                        className="w-full h-48 object-cover rounded mb-2"
-                      />
-                    )}
-                    <p className="font-semibold">{candidate.name}</p>
-                    {selectedMiss === candidate.id && (
-                      <p className="text-indigo-600 text-sm mt-1">✓ Selected</p>
-                    )}
-                  </button>
-                ))}
-              </div>
+        <div className="ballot-grid">
+          {/* Mr Candidates */}
+          <div>
+            <h2 className="ballot-col-title">Mr Unibadan</h2>
+            <div className="candidate-list">
+              {candidates.mr.map((candidate) => (
+                <button
+                  key={candidate.id}
+                  onClick={() => setSelectedMr(candidate.id)}
+                  className={`candidate-option${
+                    selectedMr === candidate.id ? " candidate-option--selected" : ""
+                  }`}
+                >
+                  {candidate.photo_url && (
+                    <img
+                      src={candidate.photo_url}
+                      alt={candidate.name}
+                      className="candidate-option-photo"
+                    />
+                  )}
+                  <span className="candidate-option-name">{candidate.name}</span>
+                  {selectedMr === candidate.id && (
+                    <span className="candidate-option-check">Selected ✓</span>
+                  )}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={handleSubmit}
-              disabled={!selectedMr || !selectedMiss || submitting}
-              className={`w-full py-3 rounded-lg font-bold text-white transition ${
-                selectedMr && selectedMiss && !submitting
-                  ? "bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-            >
-              {submitting ? "Submitting..." : "Submit Vote"}
-            </button>
-            <p className="text-center text-sm text-gray-500">
-              ⚠️ Once submitted, your vote cannot be changed.
-            </p>
+          {/* Miss Candidates */}
+          <div>
+            <h2 className="ballot-col-title">Miss Unibadan</h2>
+            <div className="candidate-list">
+              {candidates.miss.map((candidate) => (
+                <button
+                  key={candidate.id}
+                  onClick={() => setSelectedMiss(candidate.id)}
+                  className={`candidate-option${
+                    selectedMiss === candidate.id ? " candidate-option--selected" : ""
+                  }`}
+                >
+                  {candidate.photo_url && (
+                    <img
+                      src={candidate.photo_url}
+                      alt={candidate.name}
+                      className="candidate-option-photo"
+                    />
+                  )}
+                  <span className="candidate-option-name">{candidate.name}</span>
+                  {selectedMiss === candidate.id && (
+                    <span className="candidate-option-check">Selected ✓</span>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
+        </div>
+
+        {/* Submit Button */}
+        <div className="ballot-submit-row">
+          <button
+            onClick={handleSubmit}
+            disabled={!selectedMr || !selectedMiss || submitting}
+            className="gold-button focus-ring ballot-submit"
+          >
+            {submitting ? "Submitting..." : "Submit Vote"}
+            <span aria-hidden="true">↗</span>
+          </button>
+          <p className="ballot-warning">
+            Once submitted, your vote cannot be changed
+          </p>
         </div>
       </div>
     </div>
@@ -253,14 +238,17 @@ function VotePageContent() {
 
 export default function VotePage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading ballot...</p>
+    <Suspense
+      fallback={
+        <div className="ballot-status">
+          <div className="ballot-status-panel">
+            <div className="ballot-spinner" role="status" aria-label="Loading ballot" />
+            <p className="ballot-status-copy">Loading ballot...</p>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <VotePageContent />
     </Suspense>
-  )};
+  );
+}

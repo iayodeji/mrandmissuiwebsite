@@ -44,15 +44,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Verify CAPTCHA
-    if (captchaToken) {
-      const captchaValid = await verifyTurnstileToken(captchaToken, clientIp);
-      if (!captchaValid) {
-        return NextResponse.json(
-          { error: "CAPTCHA verification failed. Please try again." },
-          { status: 400 }
-        );
-      }
+    // 2. Verify CAPTCHA (required — token comes from the Turnstile widget)
+    const captchaValid = await verifyTurnstileToken(captchaToken ?? "", clientIp);
+    if (!captchaValid) {
+      return NextResponse.json(
+        { error: "CAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
     }
 
     // 3. Check for disposable email

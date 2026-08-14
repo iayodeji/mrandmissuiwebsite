@@ -21,7 +21,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <a className="nav-cta focus-ring" href="#contestants">
+        <a className="nav-cta focus-ring" href="#vote">
           Vote now <span aria-hidden="true">↘</span>
         </a>
       </div>

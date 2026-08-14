@@ -6,6 +6,7 @@ import { HeroSection } from "@/components/hero-section";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TheLineageSection } from "@/components/the-lineage-section";
+import { VotingSection } from "@/components/voting-section";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <SiteHeader />
       <main>
         <HeroSection />
+        <VotingSection />
         <ChapterOneSection />
         <ChapterTwoSection />
         <ChapterThreeSection />
