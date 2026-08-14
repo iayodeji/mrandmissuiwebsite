@@ -1,43 +1,82 @@
-import { CONTESTANTS, formatVotes, getInitials, type Contestant } from "./editorial-data";
+"use client";
 
-function ContestantCard({ contestant }: { contestant: Contestant }) {
-  const isProfile = contestant.action === "profile";
+import {
+  MR_CANDIDATES,
+  MISS_CANDIDATES,
+  CATEGORY_LABEL,
+  type CatalogCandidate,
+} from "@/lib/contestant-catalog";
+import { getInitials } from "./editorial-data";
+
+function ContestantCard({ contestant }: { contestant: CatalogCandidate }) {
+  const number = `#${String(contestant.contestant_number).padStart(2, "0")}`;
 
   return (
     <article className="contestant-card">
       <div
-        className="contestant-image-wrap contestant-placeholder"
+        className={`contestant-image-wrap${
+          contestant.photo_url ? "" : " contestant-placeholder"
+        }`}
         role="img"
-        aria-label={`Portrait placeholder for ${contestant.name}`}
+        aria-label={`Portrait of ${contestant.name}`}
       >
-        <span className="number-badge" aria-label={`Contestant ${contestant.number}`}>
-          {contestant.number}
+        {contestant.photo_url ? (
+          <img
+            src={contestant.photo_url}
+            alt={contestant.name}
+            className="contestant-photo"
+            loading="lazy"
+          />
+        ) : (
+          <div className="placeholder-art" aria-hidden="true">
+            <span className="placeholder-orbit" />
+            <span className="placeholder-monogram">{getInitials(contestant.name)}</span>
+            <span className="placeholder-caption mono">Portrait study / 2026</span>
+          </div>
+        )}
+        <span className="number-badge" aria-label={`Contestant ${number}`}>
+          {number}
         </span>
-        <div className="placeholder-art" aria-hidden="true">
-          <span className="placeholder-orbit" />
-          <span className="placeholder-monogram">{getInitials(contestant.name)}</span>
-          <span className="placeholder-caption mono">Portrait study / 2026</span>
-        </div>
       </div>
       <div className="contestant-info">
         <h3 className="contestant-name">{contestant.name}</h3>
         <div className="contestant-field">
-          <span>{contestant.discipline}</span>
-          <span>{contestant.reign}</span>
+          <span>{contestant.faculty ?? "—"}</span>
+          <span>{CATEGORY_LABEL[contestant.category]}</span>
         </div>
-        <p className="contestant-quote">“{contestant.quote}”</p>
+        {contestant.quote && (
+          <p className="contestant-quote">“{contestant.quote}”</p>
+        )}
         <div className="vote-row">
-          <span className="vote-count">{formatVotes(contestant.voteCount)}</span>
           <a
             className="vote-button focus-ring"
-            href={isProfile ? "#top" : "#vote"}
-            aria-label={`${contestant.actionLabel} for ${contestant.name}`}
+            href="#vote"
+            aria-label={`Vote for ${contestant.name}`}
           >
-            {contestant.actionLabel} <span aria-hidden="true">{isProfile ? "↗" : "♥"}</span>
+            Vote now <span aria-hidden="true">♥</span>
           </a>
         </div>
       </div>
     </article>
+  );
+}
+
+function ContestantGroup({
+  title,
+  contestants,
+}: {
+  title: string;
+  contestants: readonly CatalogCandidate[];
+}) {
+  return (
+    <div className="contestant-group">
+      <h3 className="contestant-group-title">{title}</h3>
+      <div className="contestant-grid">
+        {contestants.map((contestant) => (
+          <ContestantCard contestant={contestant} key={contestant.id} />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -59,17 +98,8 @@ export function ChapterTwoSection() {
           </p>
         </div>
 
-        <div className="contestant-grid">
-          {CONTESTANTS.map((contestant) => (
-            <ContestantCard contestant={contestant} key={contestant.id} />
-          ))}
-        </div>
-
-        <div className="all-contestants">
-          <a className="ghost-button wine-outline focus-ring" href="#contestants">
-            View all contestants <span aria-hidden="true">⌄</span>
-          </a>
-        </div>
+        <ContestantGroup title="Mr Unibadan" contestants={MR_CANDIDATES} />
+        <ContestantGroup title="Miss Unibadan" contestants={MISS_CANDIDATES} />
       </div>
     </section>
   );

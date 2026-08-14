@@ -1,0 +1,53 @@
+male in order 
+
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0070.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDcwLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ4MjQsImV4cCI6MTgxODI2MDgyNH0.Kln2pfd-J59g19McpI2kH-LQVYGbkkaKr7C0Z5ThXwg 
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0073.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDczLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ4NTQsImV4cCI6MTgxODI2MDg1NH0.7W4lMZuefXJUZk28fCUlJs1Hwvk7OJWp8rDd_G2yy30
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0074.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDc0LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ4NjUsImV4cCI6MTgxODI2MDg2NX0.Su7MreQVo0ycQVDpXPyoJzK17cu0waPrAkRXvLJFppk
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0077.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDc3LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ4NzQsImV4cCI6MTgxODI2MDg3NH0.ZpbKWJKXEhWnoSpJxekEB4qDg0dgOjLtjiZhmptGyA4
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0080.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDgwLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ4ODQsImV4cCI6MTgxODI2MDg4NH0.VytgOWhrvt-EERIG_DTt37Qf-FjRR1rXpAacOfJhFVg
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0083.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDgzLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ4OTMsImV4cCI6MTgxODI2MDg5M30.8zIYGMzn1ZZMXq-sbx2JgnYFcdF8yOk3qkhGZFS3cdo
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0086.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDg2LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5MDIsImV4cCI6MTgxODI2MDkwMn0.MR3NrV-qz7sUBIdnFU9_c_Cn3-pqkY0PTCUi4NrXJaw
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0089.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDg5LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5MTMsImV4cCI6MTgxODI2MDkxM30.zjzvtBXvfqa0dL8GVGpi3kPGG0MAthKI5Z7Nn9S2oHk
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0092.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDkyLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5MjIsImV4cCI6MTgxODI2MDkyMn0.VDJTNdQ5rtTuy5GmmXUyOGhKGZmwZf2LUMlj9aOV0lc
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0095.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMDk1LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5MzEsImV4cCI6MTgxODI2MDkzMX0.vAhto7YhCIvVFkvsXDkZDhP40M5bkTO2P8BN7hfZoFs
+
+
+female
+
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0102.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTAyLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5NDksImV4cCI6MTgxODI2MDk0OX0.OAcZI_2-GzX98bMdZDMOE_GAVR6lNcOeBIVruYS2upU
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0105.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTA1LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5NTgsImV4cCI6MTgxODI2MDk1OH0.x8FIUxyItbMdeFqd9AUohhJBxcu6P84Ik8Kv0t3Xbac
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0108.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTA4LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5NjYsImV4cCI6MTgxODI2MDk2Nn0.tgtNhcEMnPdOYKXajqJm0XeCfWZe0vleie9OOCtW1Uk
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0112.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTEyLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5NzUsImV4cCI6MTgxODI2MDk3NX0.EqKIxIg9lYq-SZfakpWRcf6nCNMDb8cuJG7xcimB0Fs
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0115.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTE1LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5ODUsImV4cCI6MTgxODI2MDk4NX0.f0Qydf3j35yIHFSF_WtGPBGuwQU_oKcs0VwS1Fe3LuM
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0118.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTE4LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjQ5OTUsImV4cCI6MTgxODI2MDk5NX0.vAmIZEH5D7BhpV4TpBbeW0dSf2nFfPUEbPxRW7PDtiY
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0123.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTIzLmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjU5MTksImV4cCI6MTgxODI2MTkxOX0.x_zK-LHJ0v3DVeUwnPyQELc9YRS_Cc51buRZtvQizbc
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0126.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTI2LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjUwMTEsImV4cCI6MTgxODI2MTAxMX0.ZTvugzckV9fU6l3p_bqS-XP8FPTByIRDFEszWvVuNp4
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0129.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTI5LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjUwMjIsImV4cCI6MTgxODI2MTAyMn0._9WN0mz-NgmMBXDtkPJD775Xq6lHtTr5iFGpTEk2fkw
+https://mcfwtrxafqvpyabxltpp.supabase.co/storage/v1/object/sign/contestant_images/IMG-20260814-WA0135.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV83OTBhZWFmZS00ODI2LTQyMWYtOGExMi1lNDRiZGZiNWMxZTYiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJjb250ZXN0YW50X2ltYWdlcy9JTUctMjAyNjA4MTQtV0EwMTM1LmpwZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODY3MjUwMzMsImV4cCI6MTgxODI2MTAzM30.DNE154ZXJoeY0BDlLVlxACUhQXFaIk6RlfxOlzo4yhU
+
+
+
+VALUES 
+  -- Male Contestants ('mr')
+  ('Adedokun Adefolahan Haleem', 'mr', 1, 'Dentistry', 'VENI, VIDI, VICI. I came, I saw, I conquered.'),
+  ('Yusuff Tolulope Fausol', 'mr', 2, 'Education', 'Win!'),
+  ('Idon Joshua Oyakhiome', 'mr', 3, 'Computing', 'Fuck beliefs and avoid being a zombie sheep'),
+  ('Adeyemi Donald Obaloluwa', 'mr', 4, 'Arts', 'Believe you can and you’re half way there'),
+  ('Durojaiye Erioluwa Okikioluwa', 'mr', 5, 'Arts', 'A moving man will one day meet his luck'),
+  ('ADEFEMI Oluwadamilola Adewunmi', 'mr', 6, 'The Social Sciences', 'Winners never quit, Quitters never win.'),
+  ('Otegbayo Inioluwa', 'mr', 7, 'Basic Medical Sciences', 'I think, therefore I am.'),
+  ('Obidare Taofeek Omobolaji', 'mr', 8, 'Arts', 'Live, and let live.'),
+  ('Adewoye David Adedamola', 'mr', 9, 'Science', 'in-between the idea and the noise, find your frequency'),
+  ('Olawuyi Babayanmife Folorunso', 'mr', 10, 'Arts', 'I am not trying to fit into the story, I am trying to make the story worth remembering'),
+
+  -- Female Contestants ('miss')
+  ('Ikwuje ojonoka Sharon', 'miss', 1, 'Agriculture', '"Que sera,sera" what ever will be, will be.'),
+  ('Tumo Gift Joanna', 'miss', 2, 'Arts', '“She believed she could, so she did"'),
+  ('Agbonoga Sofia Omoyeme', 'miss', 3, 'Basic Medical Sciences', '"Nothing can dim the light that shines from within."'),
+  ('Onamusi Ayomide Grace', 'miss', 4, 'Arts', '‘I walk like I belong , because I know I do ‘'),
+  ('Adelakun Eniolatosi Adetola', 'miss', 5, 'Education', 'becoming the best version of myself, one step at a time.'),
+  ('Imoh Favour Abasifreke', 'miss', 6, 'Science', '“Your presence is your power; never shrink yourself to fit where you were meant to stand out.”'),
+  ('Bodede Mabel Mopelola', 'miss', 7, 'Arts', 'Those who dare to begin, dare to become.'),
+  ('Adigun Precious Oluwakemisola', 'miss', 8, 'Nursing', 'I am who I am'),
+  ('God''s-Treasure Oluwafemi', 'miss', 9, 'Education', 'In all your ways acknowledge him, and he will make your paths straight.'),
+  ('Semilore', 'miss', 10, 'Arts', NULL);
