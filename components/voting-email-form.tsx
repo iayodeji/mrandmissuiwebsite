@@ -65,27 +65,25 @@ export function VotingEmailForm() {
         async
         defer
       />
-      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
-        <h2 className="text-2xl font-bold mb-2 text-center">🗳️ Cast Your Vote</h2>
-        <p className="text-gray-600 text-center mb-6">
-          Enter your email to receive your voting link
+      <div className="vote-form">
+        <p className="eyebrow">Voting link</p>
+        <h2 className="vote-form-title">Request your ballot</h2>
+        <p className="vote-form-sub">
+          Enter your email and we&apos;ll send your secure voting link.
         </p>
 
         {message && (
           <div
-            className={`mb-4 px-4 py-3 rounded-lg ${
-              message.type === "success"
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}
+            className={`vote-message vote-message--${message.type}`}
+            role="status"
           >
             {message.text}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="vote-form-fields">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="vote-field-label">
               Email Address
             </label>
             <input
@@ -95,7 +93,7 @@ export function VotingEmailForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              className="vote-input"
               disabled={loading}
             />
           </div>
@@ -104,23 +102,21 @@ export function VotingEmailForm() {
           <div
             className="cf-turnstile"
             data-sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-            data-theme="light"
+            data-theme="dark"
+            data-action="vote"
           />
 
           <button
             type="submit"
             disabled={loading || !email}
-            className={`w-full py-2 rounded-lg font-semibold text-white transition ${
-              loading || !email
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-indigo-600 hover:bg-indigo-700 cursor-pointer"
-            }`}
+            className="gold-button focus-ring vote-submit"
           >
             {loading ? "Sending..." : "Send Voting Link"}
+            <span aria-hidden="true">↗</span>
           </button>
         </form>
 
-        <p className="text-xs text-gray-500 text-center mt-4">
+        <p className="vote-form-note">
           Your vote is secure and anonymous. One email = one vote.
         </p>
       </div>

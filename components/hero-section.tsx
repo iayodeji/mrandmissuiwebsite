@@ -33,7 +33,10 @@ export function HeroSection() {
           </div>
 
           <div className="hero-actions">
-            <a className="gold-button focus-ring" href="#contestants">
+            <a className="gold-button focus-ring" href="#vote">
+              Cast your vote <span aria-hidden="true">↘</span>
+            </a>
+            <a className="ghost-button focus-ring" href="#contestants">
               Meet the contestants <span aria-hidden="true">↘</span>
             </a>
             <a className="ghost-button focus-ring" href="#leaderboard">

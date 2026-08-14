@@ -30,7 +30,7 @@ function ContestantCard({ contestant }: { contestant: Contestant }) {
           <span className="vote-count">{formatVotes(contestant.voteCount)}</span>
           <a
             className="vote-button focus-ring"
-            href={isProfile ? "#top" : "#leaderboard"}
+            href={isProfile ? "#top" : "#vote"}
             aria-label={`${contestant.actionLabel} for ${contestant.name}`}
           >
             {contestant.actionLabel} <span aria-hidden="true">{isProfile ? "↗" : "♥"}</span>
