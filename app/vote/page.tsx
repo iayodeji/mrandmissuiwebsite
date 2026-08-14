@@ -1,69 +1,62 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import {
+  MR_CANDIDATES,
+  MISS_CANDIDATES,
+  CATEGORY_LABEL,
+  type CatalogCandidate,
+} from "@/lib/contestant-catalog";
 
-interface Candidate {
-  id: string;
-  name: string;
-  category: "mr" | "miss";
-  photo_url: string | null;
-}
+function CandidateOption({
+  candidate,
+  selected,
+  onSelect,
+}: {
+  candidate: CatalogCandidate;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const number = String(candidate.contestant_number).padStart(2, "0");
 
-interface CandidatesData {
-  mr: Candidate[];
-  miss: Candidate[];
+  return (
+    <button
+      onClick={onSelect}
+      className={`candidate-option${selected ? " candidate-option--selected" : ""}`}
+    >
+      {candidate.photo_url && (
+        <img
+          src={candidate.photo_url}
+          alt={candidate.name}
+          className="candidate-option-photo"
+          loading="lazy"
+        />
+      )}
+      <span className="candidate-option-info">
+        <span className="candidate-option-number">{number}</span>
+        <span className="candidate-option-name">{candidate.name}</span>
+        {candidate.faculty && (
+          <span className="candidate-option-faculty">{candidate.faculty}</span>
+        )}
+        {candidate.quote && (
+          <span className="candidate-option-quote">“{candidate.quote}”</span>
+        )}
+      </span>
+      {selected && <span className="candidate-option-check">Selected ✓</span>}
+    </button>
+  );
 }
 
 function VotePageContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
-  const [loading, setLoading] = useState(true);
-  const [tokenValid, setTokenValid] = useState(false);
-  const [candidates, setCandidates] = useState<CandidatesData>({ mr: [], miss: [] });
   const [selectedMr, setSelectedMr] = useState<string | null>(null);
   const [selectedMiss, setSelectedMiss] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function validateAndLoadCandidates() {
-      if (!token) {
-        setError("No voting token provided.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        // Validate token
-        const validateRes = await fetch(`/api/validate-token?token=${encodeURIComponent(token)}`);
-        const validateData = (await validateRes.json()) as { valid: boolean };
-
-        if (!validateData.valid) {
-          setError("This voting link is invalid, expired, or has already been used.");
-          setLoading(false);
-          return;
-        }
-
-        setTokenValid(true);
-
-        // Fetch candidates
-        const candidatesRes = await fetch("/api/candidates");
-        const candidatesData = (await candidatesRes.json()) as CandidatesData;
-        setCandidates(candidatesData);
-
-        setLoading(false);
-      } catch (err) {
-        console.error("Error validating token or loading candidates:", err);
-        setError("An error occurred. Please try again.");
-        setLoading(false);
-      }
-    }
-
-    validateAndLoadCandidates();
-  }, [token]);
 
   async function handleSubmit() {
     if (!selectedMr || !selectedMiss || !token) return;
@@ -96,34 +89,6 @@ function VotePageContent() {
     } finally {
       setSubmitting(false);
     }
-  }
-
-  if (loading) {
-    return (
-      <div className="ballot-status">
-        <div className="ballot-status-panel">
-          <div className="ballot-spinner" role="status" aria-label="Loading ballot" />
-          <p className="ballot-status-copy">Loading ballot...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!tokenValid) {
-    return (
-      <div className="ballot-status">
-        <div className="ballot-status-panel">
-          <p className="eyebrow">Voting link</p>
-          <h1 className="ballot-status-title">Invalid link</h1>
-          <p className="ballot-status-copy">
-            {error || "This voting link is invalid, expired, or has already been used."}
-          </p>
-          <a href="/" className="gold-button focus-ring ballot-status-action">
-            Return to Home <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </div>
-    );
   }
 
   if (submitted) {
@@ -162,56 +127,30 @@ function VotePageContent() {
         <div className="ballot-grid">
           {/* Mr Candidates */}
           <div>
-            <h2 className="ballot-col-title">Mr Unibadan</h2>
+            <h2 className="ballot-col-title">{CATEGORY_LABEL.mr}</h2>
             <div className="candidate-list">
-              {candidates.mr.map((candidate) => (
-                <button
+              {MR_CANDIDATES.map((candidate) => (
+                <CandidateOption
                   key={candidate.id}
-                  onClick={() => setSelectedMr(candidate.id)}
-                  className={`candidate-option${
-                    selectedMr === candidate.id ? " candidate-option--selected" : ""
-                  }`}
-                >
-                  {candidate.photo_url && (
-                    <img
-                      src={candidate.photo_url}
-                      alt={candidate.name}
-                      className="candidate-option-photo"
-                    />
-                  )}
-                  <span className="candidate-option-name">{candidate.name}</span>
-                  {selectedMr === candidate.id && (
-                    <span className="candidate-option-check">Selected ✓</span>
-                  )}
-                </button>
+                  candidate={candidate}
+                  selected={selectedMr === candidate.id}
+                  onSelect={() => setSelectedMr(candidate.id)}
+                />
               ))}
             </div>
           </div>
 
           {/* Miss Candidates */}
           <div>
-            <h2 className="ballot-col-title">Miss Unibadan</h2>
+            <h2 className="ballot-col-title">{CATEGORY_LABEL.miss}</h2>
             <div className="candidate-list">
-              {candidates.miss.map((candidate) => (
-                <button
+              {MISS_CANDIDATES.map((candidate) => (
+                <CandidateOption
                   key={candidate.id}
-                  onClick={() => setSelectedMiss(candidate.id)}
-                  className={`candidate-option${
-                    selectedMiss === candidate.id ? " candidate-option--selected" : ""
-                  }`}
-                >
-                  {candidate.photo_url && (
-                    <img
-                      src={candidate.photo_url}
-                      alt={candidate.name}
-                      className="candidate-option-photo"
-                    />
-                  )}
-                  <span className="candidate-option-name">{candidate.name}</span>
-                  {selectedMiss === candidate.id && (
-                    <span className="candidate-option-check">Selected ✓</span>
-                  )}
-                </button>
+                  candidate={candidate}
+                  selected={selectedMiss === candidate.id}
+                  onSelect={() => setSelectedMiss(candidate.id)}
+                />
               ))}
             </div>
           </div>
@@ -238,16 +177,7 @@ function VotePageContent() {
 
 export default function VotePage() {
   return (
-    <Suspense
-      fallback={
-        <div className="ballot-status">
-          <div className="ballot-status-panel">
-            <div className="ballot-spinner" role="status" aria-label="Loading ballot" />
-            <p className="ballot-status-copy">Loading ballot...</p>
-          </div>
-        </div>
-      }
-    >
+    <Suspense fallback={null}>
       <VotePageContent />
     </Suspense>
   );
