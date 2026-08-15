@@ -172,11 +172,15 @@ export async function POST(request: NextRequest) {
       { message: "Voting link sent to your email." },
       { status: 200 }
     );
-  } catch (error) {
-    console.error("Error in request-vote-link:", error);
-    return NextResponse.json(
-      { error: "An error occurred. Please try again later." },
-      { status: 500 }
-    );
+  } catch (error: any) {
+  console.error("Error in request-vote-link:", error);
+  return NextResponse.json(
+    { 
+      error: "An error occurred.", 
+      debugMessage: error?.message || String(error),
+      debugDetails: error 
+    },
+    { status: 500 }
+  );
   }
 }
