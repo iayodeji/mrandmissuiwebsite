@@ -22,7 +22,7 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mr & Miss Unibadan 2026 | People's Choice",
+  title: "Mr & Miss Unibadan 2026",
   description:
     "Meet the contestants and cast your vote for the students carrying the identity of the University of Ibadan forward.",
   icons: {
