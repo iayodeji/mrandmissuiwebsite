@@ -2,7 +2,6 @@ import Image from "next/image";
 
 const metrics = [
   { value: "21", label: "Contestants" },
-  { value: "15", label: "Days left" },
   { value: "01", label: "Crown night" },
 ] as const;
 
@@ -11,7 +10,6 @@ export function HeroSection() {
     <section className="hero" id="hero" aria-labelledby="hero-title">
       <div className="hero-inner">
         <div className="hero-copy">
-          <span className="hero-kicker">People&apos;s choice · voting edition</span>
           <h1 className="hero-title" id="hero-title">
             Mr &amp;
             <br />

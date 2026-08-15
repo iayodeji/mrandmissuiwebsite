@@ -50,9 +50,9 @@ Edit `.env.local` with:
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 
-# Resend Email
-RESEND_API_KEY=re_xxxxxxxxxxxxx
-VOTING_EMAIL_FROM=voting@yourdomain.com
+# SendByte Email
+SENDBYTE_API_KEY=sk_xxxxxxxxxxxxx
+VOTING_EMAIL_FROM=Mr & Miss Unibadan <voting@yourdomain.com>
 
 # Cloudflare Turnstile (CAPTCHA)
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_site_key_here
@@ -66,7 +66,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000  # Change to your domain in productio
 
 #### Getting Credentials:
 - **Supabase**: Dashboard → Settings → API
-- **Resend**: [resend.com](https://resend.com) → API Keys (get free account)
+- **SendByte**: [docs.sendbyte.africa](https://docs.sendbyte.africa) → API Keys (sandbox `sk_test_` keys work immediately; swap to a live `sk_live_` key after verifying your domain)
 - **Turnstile**: [Cloudflare Dashboard](https://dash.cloudflare.com) → Turnstile (free)
 
 ## 3. Frontend Integration
@@ -107,7 +107,7 @@ npm run dev
 
 Navigate to `http://localhost:3000` and test the flow:
 1. Enter email → CAPTCHA → Submit
-2. Check console output (if RESEND_API_KEY not set, link prints to console)
+2. Check console output (if SENDBYTE_API_KEY not set, link prints to console)
 3. Copy the token from the link and manually visit: `http://localhost:3000/vote?token=xxxxx`
 4. Select candidates and submit
 
@@ -131,7 +131,7 @@ Before going live:
 
 - [ ] Update `.env.local` with production Supabase credentials
 - [ ] Update `NEXT_PUBLIC_SITE_URL` to your live domain
-- [ ] Set up email domain with Resend (verify sender domain)
+- [ ] Set up email domain with SendByte (verify sender domain)
 - [ ] Configure Turnstile site key for your production domain
 - [ ] Test full flow on staging environment
 - [ ] Back up your Supabase database
@@ -155,7 +155,7 @@ Before going live:
 ✅ CAPTCHA protection (Cloudflare Turnstile)
 ✅ Rate limiting per IP (5 requests/hour)
 ✅ Disposable email blocking
-✅ Branded email templates (Resend)
+✅ Branded email templates (SendByte)
 ✅ Token expiry (10 minutes, configurable)
 ✅ Resend same token if not yet expired (UX-friendly)
 ✅ Anonymous votes (no email-vote linkage in storage)
@@ -164,9 +164,10 @@ Before going live:
 ## 8. Troubleshooting
 
 ### Emails not sending
-- Check `RESEND_API_KEY` is set in `.env.local`
+- Check `SENDBYTE_API_KEY` is set in `.env.local`
 - In dev mode without API key, check console logs for token
-- Verify sender domain is configured in Resend dashboard
+- Verify sender domain is configured in the SendByte dashboard
+- Use a `sk_live_` key in production (sandbox `sk_test_` keys don't deliver real email)
 
 ### CAPTCHA not loading
 - Verify `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is set

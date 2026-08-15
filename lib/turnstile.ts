@@ -1,10 +1,4 @@
-// Server-side Turnstile verification (canonical siteverify flow).
-// Browser -> this backend -> challenges.cloudflare.com/turnstile/v0/siteverify.
-// Never call siteverify from the browser.
-
 const SITEVERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-// Must match data-action on the widget embed (components/voting-email-form.tsx).
-const EXPECTED_ACTION = "vote";
 
 interface SiteverifyResponse {
   success: boolean;
@@ -15,76 +9,79 @@ interface SiteverifyResponse {
 
 export async function verifyTurnstileToken(
   token: string,
-  remoteIp: string
+  remoteIp: string,
+  expectedAction: string = "vote"
 ): Promise<boolean> {
   const secretKey = process.env.TURNSTILE_SECRET_KEY;
 
+  // Fail-open ONLY in development to avoid accidentally bypassing CAPTCHA in production.
   if (!secretKey) {
-    // Development fallback: without a secret, siteverify cannot run.
-    console.warn(
-      "⚠️  TURNSTILE_SECRET_KEY not set — CAPTCHA verification will be skipped. Set it in .env.local to enforce CAPTCHA."
-    );
-    return true;
-  }
-
-  // Reject malformed tokens before hitting the network.
-  if (typeof token !== "string" || token.length === 0 || token.length > 2048) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "⚠️ TURNSTILE_SECRET_KEY not set — bypassing CAPTCHA verification in non-production environment."
+      );
+      return true;
+    }
+    console.error("❌ TURNSTILE_SECRET_KEY missing in production environment. CAPTCHA verification failed.");
     return false;
   }
 
-  // Approved frontend hostnames (TURNSTILE_HOSTNAMES). Empty set disables the
-  // hostname check — set it in production to your real domain, never localhost.
+  // Reject malformed or empty tokens early.
+  if (typeof token !== "string" || !token.trim() || token.length > 2048) {
+    return false;
+  }
+
   const expectedHostnames = new Set(
     (process.env.TURNSTILE_HOSTNAMES ?? "")
       .split(",")
-      .map((hostname) => hostname.trim())
+      .map((h) => h.trim())
       .filter(Boolean)
   );
 
   try {
+    const formData = new URLSearchParams({
+      secret: secretKey,
+      response: token,
+    });
+
+    if (remoteIp && remoteIp !== "::1" && remoteIp !== "127.0.0.1") {
+      formData.append("remoteip", remoteIp);
+    }
+
     const response = await fetch(SITEVERIFY_URL, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       signal: AbortSignal.timeout(10_000),
-      body: new URLSearchParams({
-        secret: secretKey,
-        response: token,
-        remoteip: remoteIp,
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
-      console.error(`CAPTCHA siteverify failed with status ${response.status}`);
+      console.error(`CAPTCHA siteverify HTTP error: ${response.status}`);
       return false;
     }
 
     const data = (await response.json()) as SiteverifyResponse;
 
     if (!data.success) {
-      console.error(
-        "CAPTCHA verification failed:",
-        data["error-codes"] ?? "no error codes"
-      );
+      console.error("CAPTCHA verification failed:", data["error-codes"] ?? "unknown_error");
       return false;
     }
 
     if (expectedHostnames.size > 0 && !expectedHostnames.has(data.hostname ?? "")) {
       console.error(
-        `CAPTCHA hostname mismatch: expected one of [${[...expectedHostnames].join(", ")}], got "${data.hostname}"`
+        `CAPTCHA hostname mismatch: expected [${[...expectedHostnames].join(", ")}], got "${data.hostname}"`
       );
       return false;
     }
 
-    if (data.action !== EXPECTED_ACTION) {
-      console.error(
-        `CAPTCHA action mismatch: expected "${EXPECTED_ACTION}", got "${data.action}"`
-      );
+    if (data.action !== expectedAction) {
+      console.error(`CAPTCHA action mismatch: expected "${expectedAction}", got "${data.action}"`);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error("CAPTCHA verification error:", error);
+    console.error("CAPTCHA siteverify unexpected error:", error);
     return false;
   }
 }
