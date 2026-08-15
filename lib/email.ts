@@ -1,21 +1,98 @@
-import { SendByte, SendByteError } from "@sendbyte/node";
+/**
+ * Voting-link email delivery via the SendByte REST API.
+ *
+ * We call the API directly with fetch instead of using the `@sendbyte/node`
+ * SDK: the SDK imports Node's `crypto` built-in at module load, which crashes
+ * API routes on Cloudflare Workers (500 before the handler runs). fetch is
+ * available on every runtime.
+ *
+ * Endpoint (mirrors the SDK's `emails.send`):
+ *   POST https://api.sendbyte.africa/v1/emails
+ *   Authorization: Bearer <SENDBYTE_API_KEY>
+ *   body: { from, to, subject, html }
+ */
+
+const SENDBYTE_API_URL = "https://api.sendbyte.africa/v1/emails";
 
 const sendbyteApiKey = process.env.SENDBYTE_API_KEY;
 const votingEmailFrom =
   process.env.VOTING_EMAIL_FROM || "Mr & Miss Unibadan <voting@unibadan.example.com>";
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.mrandmissunibadan.click").replace(
+  /\/+$/,
+  ""
+);
 
 if (!sendbyteApiKey) {
   console.warn("⚠️  SENDBYTE_API_KEY not set — emails will not be sent (development mode)");
 }
 
-let sendbyte: SendByte | null = null;
-if (sendbyteApiKey && /^sk_(live|test)_/.test(sendbyteApiKey)) {
-  try {
-    sendbyte = new SendByte(sendbyteApiKey);
-  } catch (error) {
-    console.warn("⚠️  Could not initialize SendByte client — emails will not be sent (development mode)");
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function sendViaSendByte(payload: {
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+}): Promise<void> {
+  if (!sendbyteApiKey) {
+    throw new Error("SENDBYTE_API_KEY is not set");
   }
+
+  const maxAttempts = 3;
+  let lastError: unknown = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30_000);
+
+    try {
+      const response = await fetch(SENDBYTE_API_URL, {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${sendbyteApiKey}`,
+          "content-type": "application/json",
+          "user-agent": "mrandmissunibadan-web/1.0",
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+
+      const text = await response.text();
+
+      if (!response.ok) {
+        let detail = text;
+        try {
+          const parsed = JSON.parse(text) as { error?: { message?: string; code?: string } };
+          detail = parsed.error?.message ?? parsed.error?.code ?? text;
+        } catch {
+          // keep raw text
+        }
+        lastError = new Error(`SendByte API error (${response.status}): ${detail}`);
+
+        const retryable = response.status === 429 || response.status >= 500;
+        if (retryable && attempt < maxAttempts) {
+          await sleep(250 * 2 ** (attempt - 1));
+          continue;
+        }
+        break;
+      }
+
+      return; // sent successfully
+    } catch (error) {
+      lastError = error;
+      if (attempt < maxAttempts) {
+        await sleep(250 * 2 ** (attempt - 1));
+        continue;
+      }
+      break;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  throw lastError ?? new Error("Failed to send email after exhausting retries");
 }
 
 export async function sendVotingLink(email: string, token: string): Promise<boolean> {
@@ -172,13 +249,13 @@ export async function sendVotingLink(email: string, token: string): Promise<bool
 </html>
   `;
 
-  if (!sendbyte) {
+  if (!sendbyteApiKey) {
     console.log(`[DEV] Would send voting link to ${email}:\n${voteLink}`);
     return true;
   }
 
   try {
-    await sendbyte.emails.send({
+    await sendViaSendByte({
       from: votingEmailFrom,
       to: email,
       subject: "Your Mr & Miss Unibadan Voting Link 🎉",
@@ -186,13 +263,7 @@ export async function sendVotingLink(email: string, token: string): Promise<bool
     });
     return true;
   } catch (error) {
-    if (error instanceof SendByteError) {
-      console.error(
-        `Failed to send email: [${error.code}] ${error.message} (status ${error.status})${error.docsUrl ? ` — ${error.docsUrl}` : ""}`
-      );
-    } else {
-      console.error("Failed to send email:", error);
-    }
+    console.error("Failed to send email:", error);
     return false;
   }
 }

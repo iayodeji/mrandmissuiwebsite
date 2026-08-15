@@ -7,10 +7,13 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { TheLineageSection } from "@/components/the-lineage-section";
 import { VotingSection } from "@/components/voting-section";
+import { JsonLd } from "@/components/json-ld";
+import { eventJsonLd } from "@/lib/seo";
 
 export default function Home() {
   return (
     <div id="top" className="site-shell">
+      <JsonLd data={eventJsonLd()} />
       <SiteHeader />
       <main>
         <HeroSection />

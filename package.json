@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@sendbyte/node": "^0.2.1",
     "@supabase/supabase-js": "^2.112.2",
     "disposable-email-domains": "^1.0.62",
     "next": "16.2.6",
