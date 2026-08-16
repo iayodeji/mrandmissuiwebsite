@@ -16,14 +16,14 @@ const SENDBYTE_API_URL = "https://api.sendbyte.africa/v1/emails";
 
 const sendbyteApiKey = process.env.SENDBYTE_API_KEY;
 const votingEmailFrom =
-  process.env.VOTING_EMAIL_FROM || "Mr & Miss Unibadan <voting@unibadan.example.com>";
+  process.env.VOTING_EMAIL_FROM || "Mr & Miss Unibadan <support@mrandmissunibadan.click>";
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.mrandmissunibadan.click").replace(
   /\/+$/,
   ""
 );
 
 if (!sendbyteApiKey) {
-  console.warn("⚠️  SENDBYTE_API_KEY not set — emails will not be sent (development mode)");
+  console.warn("⚠️  mail key not set — emails will not be sent (development mode)");
 }
 
 function sleep(ms: number): Promise<void> {
@@ -238,10 +238,10 @@ export async function sendVotingLink(email: string, token: string): Promise<bool
           ⏰ <strong>This link expires in 10 minutes.</strong> Once submitted, your vote cannot be changed.
         </div>
         <div class="divider"></div>
-        <p style="color:#aa9a92;font-size:13px;">Questions? Contact us at voting@unibadan.example.com</p>
+        <p style="color:#aa9a92;font-size:13px;">Questions? Contact us at support@mrandmissunibadan.click</p>
       </div>
       <div class="footer">
-        <p>© 2026 Mr &amp; Miss Unibadan Election</p>
+        <p>© 2026 Mr &amp; Miss Unibadan </p>
         <p>University of Ibadan · This is an automated email. Please do not reply.</p>
       </div>
     </div>
