@@ -43,7 +43,7 @@ const RAW: readonly [
   ["Bodede Mabel Mopelola", "miss", 7, "Arts", "Those who dare to begin, dare to become."],
   ["Adigun Precious Oluwakemisola", "miss", 8, "Nursing", "I am who I am"],
   ["God’s-Treasure Oluwafemi", "miss", 9, "Education", "In all your ways acknowledge him, and he will make your paths straight."],
-  ["Semilore", "miss", 10, "Arts", null],
+  ["Akpojovwo Osonobruwetekeme OluwaSemilore", "miss", 10, "Arts", "sometimes the glow up you seek is simply finding yourselff again"],
 ];
 
 // DB ids (from the candidates table), ordered by category + contestant_number
