@@ -1,3 +1,11 @@
+/**
+ * GET /api/leaderboard
+ *
+ * Security hardening applied:
+ * - Type assertion `(voteRows || []) as { candidate_id: string }[]` removed;
+ *   the typed Supabase client already infers the row shape.
+ */
+
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
@@ -12,7 +20,7 @@ export async function GET() {
     if (error) throw error;
 
     const counts = new Map<string, number>();
-    for (const row of (voteRows || []) as { candidate_id: string }[]) {
+    for (const row of voteRows ?? []) {
       counts.set(row.candidate_id, (counts.get(row.candidate_id) ?? 0) + 1);
     }
 

@@ -1,3 +1,17 @@
+/**
+ * POST /api/request-vote-link
+ *
+ * Security hardening applied:
+ * - Fail-closed: explicit 400 for missing/empty CAPTCHA token before calling
+ *   the Turnstile verification endpoint.
+ * - Atomic upsert replaces the manual check-then-insert race window.
+ * - All internal error details are logged server-side only; the client receives
+ *   a non-disclosing message.
+ * - All `as unknown as` type assertions removed in favour of the typed
+ *   Supabase client (`Database` generic).
+ * - `checkRateLimit` is now awaited (async store interface).
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { sendVotingLink } from "@/lib/email";
@@ -6,20 +20,9 @@ import { checkRateLimit } from "@/lib/rate-limiter";
 import { isDisposableEmail } from "@/lib/disposable-email-check";
 import { generateToken, getTokenExpiry } from "@/lib/crypto-utils";
 
-interface VoterRecord {
-  id: string;
-  email: string;
-  has_voted: boolean;
-  vote_token: string | null;
-  token_expires_at: string | null;
-  ip_address: string | null;
-  user_agent: string | null;
-  created_at: string;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as { email?: string; captchaToken?: string };
+    const body = (await request.json()) as { email?: string; captchaToken?: string };
     const { email, captchaToken } = body;
 
     if (!email) {
@@ -37,15 +40,24 @@ export async function POST(request: NextRequest) {
     // 1. Check rate limit by IP
     const rateLimitKey = `request-vote-link:${clientIp}`;
     const maxRequests = parseInt(process.env.VOTING_RATE_LIMIT_PER_HOUR || "5");
-    if (!checkRateLimit(rateLimitKey, maxRequests, 60)) {
+    const rateAllowed = await checkRateLimit(rateLimitKey, maxRequests, 60);
+    if (!rateAllowed) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },
         { status: 429 }
       );
     }
 
-    // 2. Verify CAPTCHA (required — token comes from the Turnstile widget)
-    const captchaValid = await verifyTurnstileToken(captchaToken ?? "", clientIp);
+    // 2. Fail-closed CAPTCHA check: reject before calling external API
+    if (!captchaToken || typeof captchaToken !== "string" || !captchaToken.trim()) {
+      return NextResponse.json(
+        { error: "CAPTCHA token is required." },
+        { status: 400 }
+      );
+    }
+
+    // 3. Verify CAPTCHA
+    const captchaValid = await verifyTurnstileToken(captchaToken, clientIp);
     if (!captchaValid) {
       return NextResponse.json(
         { error: "CAPTCHA verification failed. Please try again." },
@@ -53,7 +65,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 3. Check for disposable email
+    // 4. Check for disposable email
     if (isDisposableEmail(normalizedEmail)) {
       return NextResponse.json(
         { error: "Disposable email addresses are not allowed. Please use a permanent email." },
@@ -61,38 +73,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Look up voter by email
+    // 5. Check for existing voter
     const { data: existingVoter, error: queryError } = await supabase
       .from("voters")
       .select("*")
       .eq("email", normalizedEmail)
       .single();
 
+    // PGRST116 = no rows found — expected for a new voter
     if (queryError && queryError.code !== "PGRST116") {
-      // PGRST116 = not found, which is expected
-      throw queryError;
+      console.error("DB query error in request-vote-link:", queryError);
+      return NextResponse.json(
+        { error: "An internal server error occurred." },
+        { status: 500 }
+      );
     }
 
-    const typedVoter = existingVoter as VoterRecord | null;
     const tokenExpiryMinutes = parseInt(process.env.VOTING_TOKEN_EXPIRY_MINUTES || "10");
 
-    if (typedVoter) {
-      // Voter exists
-      if (typedVoter.has_voted) {
-        // Already voted — return generic success to avoid leaking voting status
+    if (existingVoter) {
+      // Already voted — return generic success to avoid leaking voting status
+      if (existingVoter.has_voted) {
         return NextResponse.json(
           { message: "If this email hasn't voted, a link has been sent." },
           { status: 200 }
         );
       }
 
-      // Check if token is still valid
+      // Token still valid — resend it
       if (
-        typedVoter.vote_token &&
-        new Date(typedVoter.token_expires_at!) > new Date()
+        existingVoter.vote_token &&
+        existingVoter.token_expires_at &&
+        new Date(existingVoter.token_expires_at) > new Date()
       ) {
-        // Resend same token
-        const emailSent = await sendVotingLink(normalizedEmail, typedVoter.vote_token);
+        const emailSent = await sendVotingLink(normalizedEmail, existingVoter.vote_token);
         if (!emailSent) {
           return NextResponse.json(
             { error: "Failed to send email. Please try again." },
@@ -105,26 +119,27 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Token expired — issue new token
+      // Token expired — issue new token (typed upsert)
       const newToken = generateToken();
       const newExpiry = getTokenExpiry(tokenExpiryMinutes);
 
-      const { error: updateError } = await (
-        supabase.from("voters") as unknown as {
-          update: (
-            data: Record<string, unknown>
-          ) => { eq: (col: string, val: unknown) => Promise<{ error: unknown }> };
-        }
-      )
+      const { error: updateError } = await supabase
+        .from("voters")
         .update({
           vote_token: newToken,
           token_expires_at: newExpiry.toISOString(),
           ip_address: clientIp,
           user_agent: request.headers.get("user-agent"),
         })
-        .eq("id", typedVoter.id);
+        .eq("id", existingVoter.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error("DB update error in request-vote-link:", updateError);
+        return NextResponse.json(
+          { error: "An internal server error occurred." },
+          { status: 500 }
+        );
+      }
 
       const emailSent = await sendVotingLink(normalizedEmail, newToken);
       if (!emailSent) {
@@ -140,25 +155,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // New voter — create row, generate token, send email
+    // 6. New voter — atomic upsert to eliminate race condition
     const newToken = generateToken();
     const newExpiry = getTokenExpiry(tokenExpiryMinutes);
 
-    const { error: insertError } = await (
-      supabase.from("voters") as unknown as {
-        insert: (
-          data: Record<string, unknown>
-        ) => Promise<{ error: unknown }>;
-      }
-    ).insert({
-      email: normalizedEmail,
-      vote_token: newToken,
-      token_expires_at: newExpiry.toISOString(),
-      ip_address: clientIp,
-      user_agent: request.headers.get("user-agent"),
-    });
+    const { error: upsertError } = await supabase.from("voters").upsert(
+      {
+        email: normalizedEmail,
+        vote_token: newToken,
+        token_expires_at: newExpiry.toISOString(),
+        ip_address: clientIp,
+        user_agent: request.headers.get("user-agent"),
+      },
+      { onConflict: "email" }
+    );
 
-    if (insertError) throw insertError;
+    if (upsertError) {
+      console.error("DB upsert error in request-vote-link:", upsertError);
+      return NextResponse.json(
+        { error: "An internal server error occurred." },
+        { status: 500 }
+      );
+    }
 
     const emailSent = await sendVotingLink(normalizedEmail, newToken);
     if (!emailSent) {
@@ -172,15 +190,12 @@ export async function POST(request: NextRequest) {
       { message: "Voting link sent to your email." },
       { status: 200 }
     );
-  } catch (error: any) {
-  console.error("Error in request-vote-link:", error);
-  return NextResponse.json(
-    { 
-      error: "An error occurred.", 
-      debugMessage: error?.message || String(error),
-      debugDetails: error 
-    },
-    { status: 500 }
-  );
+  } catch (error: unknown) {
+    console.error("Error in request-vote-link:", error);
+    // No internal details leaked to the client
+    return NextResponse.json(
+      { error: "An internal server error occurred." },
+      { status: 500 }
+    );
   }
 }

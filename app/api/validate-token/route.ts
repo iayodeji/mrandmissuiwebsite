@@ -1,13 +1,14 @@
+/**
+ * GET /api/validate-token
+ *
+ * Security hardening applied:
+ * - All `as unknown as` type assertions removed — the typed Supabase client
+ *   infers correct types from the Database generic.
+ * - Error responses never leak internal details.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-
-interface VoterRecord {
-  id: string;
-  email: string;
-  has_voted: boolean;
-  vote_token: string | null;
-  token_expires_at: string | null;
-}
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,32 +18,23 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ valid: false }, { status: 400 });
     }
 
-    const { data: voter, error } = await (
-      supabase.from("voters") as unknown as {
-        select: (cols: string) => {
-          eq: (col: string, val: unknown) => {
-            single: () => Promise<{ data: unknown; error: unknown }>;
-          };
-        };
-      }
-    )
+    const { data: voter, error } = await supabase
+      .from("voters")
       .select("*")
       .eq("vote_token", token)
       .single();
 
-    const typedVoter = voter as VoterRecord | null;
-
-    if (error || !typedVoter) {
+    if (error || !voter) {
       return NextResponse.json({ valid: false }, { status: 200 });
     }
 
-    // Check if already voted
-    if (typedVoter.has_voted) {
+    // Already voted
+    if (voter.has_voted) {
       return NextResponse.json({ valid: false }, { status: 200 });
     }
 
-    // Check if token expired
-    if (typedVoter.token_expires_at && new Date(typedVoter.token_expires_at) < new Date()) {
+    // Token expired
+    if (voter.token_expires_at && new Date(voter.token_expires_at) < new Date()) {
       return NextResponse.json({ valid: false }, { status: 200 });
     }
 

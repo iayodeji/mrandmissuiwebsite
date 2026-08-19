@@ -1,10 +1,22 @@
+/**
+ * POST /api/confirm-vote
+ *
+ * Security hardening applied:
+ * - All `as unknown as` type assertions removed — the typed Supabase client
+ *   handles `rpc()` correctly via the Database generic.
+ * - Error responses never expose internal details; everything is logged
+ *   server-side.
+ * - `confirm_vote_atomic` is already transaction-safe in the database; the
+ *   RPC call wraps the transaction boundary.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as {
+    const body = (await request.json()) as {
       token?: string;
       mrCandidateId?: string;
       missCandidateId?: string;
@@ -49,20 +61,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Perform atomic confirm-vote transaction
+    // Perform atomic confirm-vote transaction via the database RPC function
     const voteSessionId = uuidv4();
+
     try {
-      await (
-        supabase.rpc as unknown as (
-          func: string,
-          args: Record<string, unknown>
-        ) => Promise<unknown>
-      )("confirm_vote_atomic", {
+      const { error: rpcError } = await supabase.rpc("confirm_vote_atomic", {
         p_token: token,
         p_mr_candidate_id: mrCandidateId,
         p_miss_candidate_id: missCandidateId,
         p_vote_session_id: voteSessionId,
       });
+
+      if (rpcError) {
+        // RPC raised an exception (token invalid / expired / already used)
+        console.error("confirm_vote_atomic RPC error:", rpcError.message);
+        return NextResponse.json(
+          { error: "This link is invalid or has already been used." },
+          { status: 400 }
+        );
+      }
 
       return NextResponse.json(
         { message: "Vote recorded successfully!" },
@@ -70,7 +87,6 @@ export async function POST(request: NextRequest) {
       );
     } catch (rpcError) {
       console.error("Transaction error:", rpcError);
-      // Generic error message to avoid leaking reason
       return NextResponse.json(
         { error: "This link is invalid or has already been used." },
         { status: 400 }
@@ -79,7 +95,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error in confirm-vote:", error);
     return NextResponse.json(
-      { error: "An error occurred. Please try again." },
+      { error: "An internal server error occurred." },
       { status: 500 }
     );
   }

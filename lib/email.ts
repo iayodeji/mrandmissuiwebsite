@@ -23,6 +23,7 @@ const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.mrandmissuniba
 );
 
 if (!sendbyteApiKey) {
+  
   console.warn("⚠️  mail key not set — emails will not be sent (development mode)");
 }
 
@@ -40,7 +41,7 @@ async function sendViaSendByte(payload: {
     throw new Error("SENDBYTE_API_KEY is not set");
   }
 
-  const maxAttempts = 3;
+  const maxAttempts = 5;
   let lastError: unknown = null;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
