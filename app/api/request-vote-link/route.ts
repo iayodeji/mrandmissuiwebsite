@@ -10,6 +10,14 @@
  * - All `as unknown as` type assertions removed in favour of the typed
  *   Supabase client (`Database` generic).
  * - `checkRateLimit` is now awaited (async store interface).
+ *
+ * LOAD TESTING:
+ * - Setting LOAD_TEST_MODE=true skips the CAPTCHA check entirely, for local
+ *   load testing only (see scripts/load-test.ts).
+ * - Defaults to skipped/false — CAPTCHA is enforced unless this var is
+ *   explicitly set. NEVER set LOAD_TEST_MODE=true in production env vars
+ *   (Vercel project settings) — doing so disables bot protection on this
+ *   endpoint entirely.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -48,21 +56,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 2. Fail-closed CAPTCHA check: reject before calling external API
-    if (!captchaToken || typeof captchaToken !== "string" || !captchaToken.trim()) {
-      return NextResponse.json(
-        { error: "CAPTCHA token is required." },
-        { status: 400 }
-      );
-    }
+    // 2 & 3. CAPTCHA check — skipped only when LOAD_TEST_MODE=true (local load testing)
+    const isLoadTest = process.env.LOAD_TEST_MODE === "true";
+    if (!isLoadTest) {
+      // Fail-closed CAPTCHA check: reject before calling external API
+      if (!captchaToken || typeof captchaToken !== "string" || !captchaToken.trim()) {
+        return NextResponse.json(
+          { error: "CAPTCHA token is required." },
+          { status: 400 }
+        );
+      }
 
-    // 3. Verify CAPTCHA
-    const captchaValid = await verifyTurnstileToken(captchaToken, clientIp);
-    if (!captchaValid) {
-      return NextResponse.json(
-        { error: "CAPTCHA verification failed. Please try again." },
-        { status: 400 }
-      );
+      const captchaValid = await verifyTurnstileToken(captchaToken, clientIp);
+      if (!captchaValid) {
+        return NextResponse.json(
+          { error: "CAPTCHA verification failed. Please try again." },
+          { status: 400 }
+        );
+      }
     }
 
     // 4. Check for disposable email
