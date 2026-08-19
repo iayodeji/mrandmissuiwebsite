@@ -10,6 +10,13 @@
  * - All `as unknown as` type assertions removed in favour of the typed
  *   Supabase client (`Database` generic).
  * - `checkRateLimit` is now awaited (async store interface).
+ * - Email is normalized (lowercase, strip +tag, strip dots for Gmail/Googlemail)
+ *   before any DB lookup or write. Lookups and the upsert conflict target are
+ *   on `normalized_email`, not raw `email`, so the dot-trick / plus-trick can no
+ *   longer be used to create multiple voter rows for the same real inbox.
+ *   NOTE: returning a specific "you've already voted" style message below is a
+ *   deliberate deviation from the anti-enumeration generic message previously
+ *   used for the has_voted=true case — accepted tradeoff, see PR discussion.
  *
  * LOAD TESTING:
  * - Setting LOAD_TEST_MODE=true skips the CAPTCHA check entirely, for local
@@ -27,6 +34,7 @@ import { verifyTurnstileToken } from "@/lib/turnstile";
 import { checkRateLimit } from "@/lib/rate-limiter";
 import { isDisposableEmail } from "@/lib/disposable-email-check";
 import { generateToken, getTokenExpiry } from "@/lib/crypto-utils";
+import { normalizeEmail } from "@/lib/normalize-email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,7 +45,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
+    // Raw, lightly-cleaned email — this is what we STORE and what we SEND to.
+    const cleanedEmail = email.toLowerCase().trim();
+
+    // Normalized form (strips +tag everywhere, strips dots for gmail/googlemail)
+    // — this is what we LOOK UP and CONFLICT on, so name+1@gmail.com,
+    // n.a.m.e@gmail.com, and name@gmail.com all collapse to one voter.
+    const normalizedEmail = normalizeEmail(cleanedEmail);
 
     // Get client IP for rate limiting
     const clientIp =
@@ -76,19 +90,21 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 4. Check for disposable email
-    if (isDisposableEmail(normalizedEmail)) {
+    // 4. Check for disposable email (checked against the cleaned, non-normalized
+    // form — disposable-domain lists match on domain, normalization doesn't
+    // change the domain except googlemail -> gmail, which is fine either way)
+    if (isDisposableEmail(cleanedEmail)) {
       return NextResponse.json(
         { error: "Disposable email addresses are not allowed. Please use a permanent email." },
         { status: 400 }
       );
     }
 
-    // 5. Check for existing voter
+    // 5. Check for existing voter BY NORMALIZED EMAIL
     const { data: existingVoter, error: queryError } = await supabase
       .from("voters")
       .select("*")
-      .eq("email", normalizedEmail)
+      .eq("normalized_email", normalizedEmail)
       .single();
 
     // PGRST116 = no rows found — expected for a new voter
@@ -103,21 +119,23 @@ export async function POST(request: NextRequest) {
     const tokenExpiryMinutes = parseInt(process.env.VOTING_TOKEN_EXPIRY_MINUTES || "10");
 
     if (existingVoter) {
-      // Already voted — return generic success to avoid leaking voting status
+      // Already voted — including via a +tag/dot variant of this same inbox.
       if (existingVoter.has_voted) {
         return NextResponse.json(
-          { message: "If this email hasn't voted, a link has been sent." },
-          { status: 200 }
+          { error: "Abah na, stop trying to vote more than once na 😭" },
+          { status: 409 }
         );
       }
 
-      // Token still valid — resend it
+      // Token still valid — resend it to the ORIGINAL email on file, not
+      // whatever variant they just typed, so we don't keep minting new
+      // "valid" addresses for the same person.
       if (
         existingVoter.vote_token &&
         existingVoter.token_expires_at &&
         new Date(existingVoter.token_expires_at) > new Date()
       ) {
-        const emailSent = await sendVotingLink(normalizedEmail, existingVoter.vote_token);
+        const emailSent = await sendVotingLink(existingVoter.email, existingVoter.vote_token);
         if (!emailSent) {
           return NextResponse.json(
             { error: "Failed to send email. Please try again." },
@@ -152,7 +170,7 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const emailSent = await sendVotingLink(normalizedEmail, newToken);
+      const emailSent = await sendVotingLink(existingVoter.email, newToken);
       if (!emailSent) {
         return NextResponse.json(
           { error: "Failed to send email. Please try again." },
@@ -166,19 +184,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 6. New voter — atomic upsert to eliminate race condition
+    // 6. New voter — atomic upsert on normalized_email to eliminate the race
+    // condition AND close off the dot/plus-trick at the DB level (belt and
+    // braces alongside the read check above).
     const newToken = generateToken();
     const newExpiry = getTokenExpiry(tokenExpiryMinutes);
 
     const { error: upsertError } = await supabase.from("voters").upsert(
       {
-        email: normalizedEmail,
+        email: cleanedEmail,
+        normalized_email: normalizedEmail,
         vote_token: newToken,
         token_expires_at: newExpiry.toISOString(),
         ip_address: clientIp,
         user_agent: request.headers.get("user-agent"),
       },
-      { onConflict: "email" }
+      { onConflict: "normalized_email" }
     );
 
     if (upsertError) {
@@ -189,7 +210,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const emailSent = await sendVotingLink(normalizedEmail, newToken);
+    const emailSent = await sendVotingLink(cleanedEmail, newToken);
     if (!emailSent) {
       return NextResponse.json(
         { error: "Failed to send email. Please try again." },

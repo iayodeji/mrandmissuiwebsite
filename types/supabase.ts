@@ -22,6 +22,7 @@ export interface Database {
         Row: {
           id: string;
           email: string;
+          normalized_email: string;
           has_voted: boolean;
           vote_token: string | null;
           token_expires_at: string | null;
@@ -32,6 +33,7 @@ export interface Database {
         Insert: {
           id?: string;
           email: string;
+          normalized_email: string;
           has_voted?: boolean;
           vote_token?: string | null;
           token_expires_at?: string | null;
@@ -42,6 +44,7 @@ export interface Database {
         Update: {
           id?: string;
           email?: string;
+          normalized_email?: string;
           has_voted?: boolean;
           vote_token?: string | null;
           token_expires_at?: string | null;
@@ -51,7 +54,7 @@ export interface Database {
         };
         Relationships: [];
       };
-      candidates: {
+         candidates: {
         Row: {
           id: string;
           name: string;
