@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const metrics = [
-  { value: "21", label: "Contestants" },
+  { value: "20", label: "Contestants" },
   { value: "01", label: "Crown night" },
 ] as const;
 
