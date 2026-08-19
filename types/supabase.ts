@@ -122,6 +122,10 @@ export interface Database {
         };
         Returns: void;
       };
+      get_leaderboard_counts: {
+        Args: Record<string, never>;
+        Returns: { candidate_id: string; vote_count: number }[];
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;

@@ -1,9 +1,9 @@
 /**
  * GET /api/leaderboard
  *
- * Security hardening applied:
- * - Type assertion `(voteRows || []) as { candidate_id: string }[]` removed;
- *   the typed Supabase client already infers the row shape.
+ * Counts are computed in Postgres via get_leaderboard_counts() RPC —
+ * avoids PostgREST's 1000-row default limit entirely since we never
+ * fetch raw vote rows, only the aggregated result.
  */
 
 import { NextResponse } from "next/server";
@@ -13,20 +13,22 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const { data: voteRows, error } = await supabase
-      .from("votes")
-      .select("candidate_id");
+    const { data, error } = await supabase.rpc("get_leaderboard_counts");
 
-    if (error) throw error;
-
-    const counts = new Map<string, number>();
-    for (const row of voteRows ?? []) {
-      counts.set(row.candidate_id, (counts.get(row.candidate_id) ?? 0) + 1);
+    if (error) {
+      console.error("Leaderboard RPC error:", error.message);
+      return NextResponse.json(
+        { error: "Failed to fetch leaderboard" },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({
-      counts: Object.fromEntries(counts),
-    });
+    const counts: Record<string, number> = {};
+    for (const row of data ?? []) {
+      counts[row.candidate_id] = Number(row.vote_count);
+    }
+
+    return NextResponse.json({ counts });
   } catch (error) {
     console.error("Error fetching leaderboard:", error);
     return NextResponse.json(
