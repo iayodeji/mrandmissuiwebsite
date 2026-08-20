@@ -1,0 +1,57 @@
+# .github/workflows/send-voting-links.yml
+#
+# Polls public.voters every 10 minutes. If 50 or more voters have
+# has_voted = false AND link_sent_at IS NULL (i.e. registered but never
+# emailed a link yet), runs scripts/send-mass-voting-links.ts to send
+# them one-time voting links.
+#
+# Dedupe safety: link_sent_at is set by the script itself the moment a
+# link is successfully sent to a given voter, so once this workflow
+# processes someone, they drop out of the "pending" count and won't be
+# picked up again on the next run — even if they still haven't voted.
+#
+# Manual trigger available via workflow_dispatch for testing without
+# waiting for the threshold or the schedule.
+
+name: send-voting-links
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  check-and-send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check pending count
+        id: check
+        run: |
+          COUNT=$(curl -s -D - -o /dev/null \
+            "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/voters?select=id&has_voted=eq.false&link_sent_at=is.null" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Prefer: count=exact" \
+            | grep -i '^content-range:' | cut -d '/' -f2 | tr -d '\r')
+          echo "Pending voters (not yet sent a link): $COUNT"
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node
+        if: fromJSON(steps.check.outputs.count) >= 50
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        if: fromJSON(steps.check.outputs.count) >= 50
+        run: npm ci
+
+      - name: Send voting links
+        if: fromJSON(steps.check.outputs.count) >= 50
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SENDBYTE_API_KEY: ${{ secrets.SENDBYTE_API_KEY }}
+        run: npx tsx scripts/send-mass-voting-links.ts
