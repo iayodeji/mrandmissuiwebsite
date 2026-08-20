@@ -7,7 +7,16 @@
  *   distributed stores (e.g. Upstash Redis) in serverless environments.
  * - PRUNE_INTERVAL and PRUNE_BATCH_SIZE control the GC frequency/size to keep
  *   each invocation cheap.
+ * - Default store swapped from InMemoryStore to UpstashRateLimiterStore.
+ *   In-memory doesn't work correctly on serverless platforms like Vercel --
+ *   each invocation can land on a different instance with its own separate
+ *   Map, so limits ended up being "per lambda instance" instead of "per
+ *   user," causing inconsistent/premature 429s. Upstash gives a real shared
+ *   limit across all instances. InMemoryStore is kept below for local
+ *   dev/testing use if you want to pass it explicitly.
  */
+
+import { UpstashRateLimiterStore } from "./upstash-rate-limit-store";
 
 // ---------------------------------------------------------------------------
 // Abstract store interface — swap in Redis / Upstash for distributed limits
@@ -53,7 +62,7 @@ function pruneExpiredKeys(store: Map<string, RateLimitRecord>): void {
   }
 }
 
-class InMemoryStore implements RateLimiterStore {
+export class InMemoryStore implements RateLimiterStore {
   private map = new Map<string, RateLimitRecord>();
 
   async get(key: string): Promise<RateLimitRecord | undefined> {
@@ -72,10 +81,14 @@ class InMemoryStore implements RateLimiterStore {
 }
 
 // ---------------------------------------------------------------------------
-// Default store (in-memory). Swap this for an UpstashStore in prod if needed.
+// Default store. In-memory doesn't work correctly on serverless platforms
+// like Vercel -- each invocation can land on a different instance with its
+// own separate Map, so limits end up being "per lambda instance" instead of
+// "per user." Using UpstashRateLimiterStore here so the limit is actually
+// shared/global across all instances.
 // ---------------------------------------------------------------------------
 
-const defaultStore: RateLimiterStore = new InMemoryStore();
+const defaultStore: RateLimiterStore = new UpstashRateLimiterStore();
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -87,7 +100,7 @@ const defaultStore: RateLimiterStore = new InMemoryStore();
  * @param key            Unique identifier (e.g. "request-vote-link:1.2.3.4")
  * @param maxRequests    Maximum allowed requests in the window
  * @param windowMinutes  Window length in minutes
- * @param store          Optional custom store (defaults to in-memory)
+ * @param store          Optional custom store (defaults to Upstash)
  * @returns `true` if the request is allowed, `false` if rate-limited
  */
 export async function checkRateLimit(
