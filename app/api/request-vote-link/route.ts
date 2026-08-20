@@ -9,14 +9,21 @@
  *   a non-disclosing message.
  * - All `as unknown as` type assertions removed in favour of the typed
  *   Supabase client (`Database` generic).
- * - `checkRateLimit` is now awaited (async store interface).
+ * - `checkRateLimit` is now awaited (async store interface), backed by
+ *   Upstash Redis so limits are shared across serverless instances.
  * - Email is normalized (lowercase, strip +tag, strip dots for Gmail/Googlemail)
  *   before any DB lookup or write. Lookups and the upsert conflict target are
  *   on `normalized_email`, not raw `email`, so the dot-trick / plus-trick can no
  *   longer be used to create multiple voter rows for the same real inbox.
  *   NOTE: returning a specific "you've already voted" style message below is a
  *   deliberate deviation from the anti-enumeration generic message previously
- *   used for the has_voted=true case — accepted tradeoff, see PR discussion.
+ *   used for the has_voted=true case — accepted tradeoff.
+ * - `link_sent_at` is stamped on the voter row immediately after ANY
+ *   successful sendVotingLink() call (resend, re-issue, or brand new), never
+ *   before. This is the dedupe guard scripts/send-mass-voting-links.ts relies
+ *   on to know who's already been emailed a link — without stamping it here
+ *   too, that script's "pending" count is wrong for anyone who got their
+ *   link directly through this route (i.e. almost everyone).
  *
  * LOAD TESTING:
  * - Setting LOAD_TEST_MODE=true skips the CAPTCHA check entirely, for local
@@ -36,6 +43,8 @@ import { isDisposableEmail } from "@/lib/disposable-email-check";
 import { generateToken, getTokenExpiry } from "@/lib/crypto-utils";
 import { normalizeEmail } from "@/lib/normalize-email";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { email?: string; captchaToken?: string };
@@ -43,6 +52,13 @@ export async function POST(request: NextRequest) {
 
     if (!email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    if (!EMAIL_REGEX.test(email.trim())) {
+      return NextResponse.json(
+        { error: "Please enter a valid email address." },
+        { status: 400 }
+      );
     }
 
     // Raw, lightly-cleaned email — this is what we STORE and what we SEND to.
@@ -61,7 +77,7 @@ export async function POST(request: NextRequest) {
 
     // 1. Check rate limit by IP
     const rateLimitKey = `request-vote-link:${clientIp}`;
-    const maxRequests = parseInt(process.env.VOTING_RATE_LIMIT_PER_HOUR || "5");
+    const maxRequests = parseInt(process.env.VOTING_RATE_LIMIT_PER_HOUR || "15");
     const rateAllowed = await checkRateLimit(rateLimitKey, maxRequests, 60);
     if (!rateAllowed) {
       return NextResponse.json(
@@ -142,6 +158,17 @@ export async function POST(request: NextRequest) {
             { status: 500 }
           );
         }
+
+        // Stamp link_sent_at only after a confirmed successful send.
+        const { error: stampError } = await supabase
+          .from("voters")
+          .update({ link_sent_at: new Date().toISOString() })
+          .eq("id", existingVoter.id);
+
+        if (stampError) {
+          console.error("Failed to stamp link_sent_at (resend path):", stampError);
+        }
+
         return NextResponse.json(
           { message: "Voting link resent to your email." },
           { status: 200 }
@@ -176,6 +203,16 @@ export async function POST(request: NextRequest) {
           { error: "Failed to send email. Please try again." },
           { status: 500 }
         );
+      }
+
+      // Stamp link_sent_at only after a confirmed successful send.
+      const { error: stampError } = await supabase
+        .from("voters")
+        .update({ link_sent_at: new Date().toISOString() })
+        .eq("id", existingVoter.id);
+
+      if (stampError) {
+        console.error("Failed to stamp link_sent_at (reissue path):", stampError);
       }
 
       return NextResponse.json(
@@ -216,6 +253,16 @@ export async function POST(request: NextRequest) {
         { error: "Failed to send email. Please try again." },
         { status: 500 }
       );
+    }
+
+    // Stamp link_sent_at only after a confirmed successful send.
+    const { error: stampError } = await supabase
+      .from("voters")
+      .update({ link_sent_at: new Date().toISOString() })
+      .eq("normalized_email", normalizedEmail);
+
+    if (stampError) {
+      console.error("Failed to stamp link_sent_at (new voter path):", stampError);
     }
 
     return NextResponse.json(

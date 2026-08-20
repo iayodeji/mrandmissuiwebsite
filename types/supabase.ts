@@ -18,7 +18,7 @@ export type GenericRelationship = {
 export interface Database {
   public: {
     Tables: {
-      voters: {
+            voters: {
         Row: {
           id: string;
           email: string;
@@ -28,6 +28,7 @@ export interface Database {
           token_expires_at: string | null;
           ip_address: string | null;
           user_agent: string | null;
+          link_sent_at: string | null;
           created_at: string;
         };
         Insert: {
@@ -39,6 +40,7 @@ export interface Database {
           token_expires_at?: string | null;
           ip_address?: string | null;
           user_agent?: string | null;
+          link_sent_at?: string | null;
           created_at?: string;
         };
         Update: {
@@ -50,6 +52,7 @@ export interface Database {
           token_expires_at?: string | null;
           ip_address?: string | null;
           user_agent?: string | null;
+          link_sent_at?: string | null;
           created_at?: string;
         };
         Relationships: [];
