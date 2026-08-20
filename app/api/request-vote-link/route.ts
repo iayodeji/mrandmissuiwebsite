@@ -1,39 +1,3 @@
-/**
- * POST /api/request-vote-link
- *
- * Security hardening applied:
- * - Fail-closed: explicit 400 for missing/empty CAPTCHA token before calling
- *   the Turnstile verification endpoint.
- * - Atomic upsert replaces the manual check-then-insert race window.
- * - All internal error details are logged server-side only; the client receives
- *   a non-disclosing message.
- * - All `as unknown as` type assertions removed in favour of the typed
- *   Supabase client (`Database` generic).
- * - `checkRateLimit` is now awaited (async store interface), backed by
- *   Upstash Redis so limits are shared across serverless instances.
- * - Email is normalized (lowercase, strip +tag, strip dots for Gmail/Googlemail)
- *   before any DB lookup or write. Lookups and the upsert conflict target are
- *   on `normalized_email`, not raw `email`, so the dot-trick / plus-trick can no
- *   longer be used to create multiple voter rows for the same real inbox.
- *   NOTE: returning a specific "you've already voted" style message below is a
- *   deliberate deviation from the anti-enumeration generic message previously
- *   used for the has_voted=true case — accepted tradeoff.
- * - `link_sent_at` is stamped on the voter row immediately after ANY
- *   successful sendVotingLink() call (resend, re-issue, or brand new), never
- *   before. This is the dedupe guard scripts/send-mass-voting-links.ts relies
- *   on to know who's already been emailed a link — without stamping it here
- *   too, that script's "pending" count is wrong for anyone who got their
- *   link directly through this route (i.e. almost everyone).
- *
- * LOAD TESTING:
- * - Setting LOAD_TEST_MODE=true skips the CAPTCHA check entirely, for local
- *   load testing only (see scripts/load-test.ts).
- * - Defaults to skipped/false — CAPTCHA is enforced unless this var is
- *   explicitly set. NEVER set LOAD_TEST_MODE=true in production env vars
- *   (Vercel project settings) — doing so disables bot protection on this
- *   endpoint entirely.
- */
-
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { sendVotingLink } from "@/lib/email";
@@ -55,127 +19,77 @@ export async function POST(request: NextRequest) {
     }
 
     if (!EMAIL_REGEX.test(email.trim())) {
-      return NextResponse.json(
-        { error: "Please enter a valid email address." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
     }
 
-    // Raw, lightly-cleaned email — this is what we STORE and what we SEND to.
     const cleanedEmail = email.toLowerCase().trim();
-
-    // Normalized form (strips +tag everywhere, strips dots for gmail/googlemail)
-    // — this is what we LOOK UP and CONFLICT on, so name+1@gmail.com,
-    // n.a.m.e@gmail.com, and name@gmail.com all collapse to one voter.
     const normalizedEmail = normalizeEmail(cleanedEmail);
 
-    // Get client IP for rate limiting
     const clientIp =
       request.headers.get("x-forwarded-for")?.split(",")[0] ||
       request.headers.get("x-real-ip") ||
       "unknown";
 
-    // 1. Check rate limit by IP
+    // 1. Check rate limit
     const rateLimitKey = `request-vote-link:${clientIp}`;
     const maxRequests = parseInt(process.env.VOTING_RATE_LIMIT_PER_HOUR || "15");
     const rateAllowed = await checkRateLimit(rateLimitKey, maxRequests, 60);
     if (!rateAllowed) {
-      return NextResponse.json(
-        { error: "Too many requests. Please try again later." },
-        { status: 429 }
-      );
+      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
     }
 
-    // 2 & 3. CAPTCHA check — skipped only when LOAD_TEST_MODE=true (local load testing)
+    // 2 & 3. CAPTCHA check
     const isLoadTest = process.env.LOAD_TEST_MODE === "true";
     if (!isLoadTest) {
-      // Fail-closed CAPTCHA check: reject before calling external API
       if (!captchaToken || typeof captchaToken !== "string" || !captchaToken.trim()) {
-        return NextResponse.json(
-          { error: "CAPTCHA token is required." },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "CAPTCHA token is required." }, { status: 400 });
       }
 
       const captchaValid = await verifyTurnstileToken(captchaToken, clientIp);
       if (!captchaValid) {
-        return NextResponse.json(
-          { error: "CAPTCHA verification failed. Please try again." },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: "CAPTCHA verification failed. Please try again." }, { status: 400 });
       }
     }
 
-    // 4. Check for disposable email (checked against the cleaned, non-normalized
-    // form — disposable-domain lists match on domain, normalization doesn't
-    // change the domain except googlemail -> gmail, which is fine either way)
+    // 4. Disposable email check
     if (isDisposableEmail(cleanedEmail)) {
-      return NextResponse.json(
-        { error: "Disposable email addresses are not allowed. Please use a permanent email." },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Disposable email addresses are not allowed." }, { status: 400 });
     }
 
-    // 5. Check for existing voter BY NORMALIZED EMAIL
+    // 5. Existing voter check
     const { data: existingVoter, error: queryError } = await supabase
       .from("voters")
       .select("*")
       .eq("normalized_email", normalizedEmail)
       .single();
 
-    // PGRST116 = no rows found — expected for a new voter
     if (queryError && queryError.code !== "PGRST116") {
       console.error("DB query error in request-vote-link:", queryError);
-      return NextResponse.json(
-        { error: "An internal server error occurred." },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
     }
 
     const tokenExpiryMinutes = parseInt(process.env.VOTING_TOKEN_EXPIRY_MINUTES || "10");
 
     if (existingVoter) {
-      // Already voted — including via a +tag/dot variant of this same inbox.
       if (existingVoter.has_voted) {
-        return NextResponse.json(
-          { error: "Abah na, stop trying to vote more than once na 😭" },
-          { status: 409 }
-        );
+        return NextResponse.json({ error: "Abah na, stop trying to vote more than once na 😭" }, { status: 409 });
       }
 
-      // Token still valid — resend it to the ORIGINAL email on file, not
-      // whatever variant they just typed, so we don't keep minting new
-      // "valid" addresses for the same person.
+      // RESEND PATH
       if (
         existingVoter.vote_token &&
         existingVoter.token_expires_at &&
         new Date(existingVoter.token_expires_at) > new Date()
       ) {
-        const emailSent = await sendVotingLink(existingVoter.email, existingVoter.vote_token);
+        // Pass existingVoter.id as the 3rd argument
+        const emailSent = await sendVotingLink(existingVoter.email, existingVoter.vote_token, existingVoter.id);
         if (!emailSent) {
-          return NextResponse.json(
-            { error: "Failed to send email. Please try again." },
-            { status: 500 }
-          );
+          return NextResponse.json({ error: "Failed to send email. Please try again." }, { status: 500 });
         }
-
-        // Stamp link_sent_at only after a confirmed successful send.
-        const { error: stampError } = await supabase
-          .from("voters")
-          .update({ link_sent_at: new Date().toISOString() })
-          .eq("id", existingVoter.id);
-
-        if (stampError) {
-          console.error("Failed to stamp link_sent_at (resend path):", stampError);
-        }
-
-        return NextResponse.json(
-          { message: "Voting link resent to your email." },
-          { status: 200 }
-        );
+        return NextResponse.json({ message: "Voting link resent to your email." }, { status: 200 });
       }
 
-      // Token expired — issue new token (typed upsert)
+      // REISSUE PATH
       const newToken = generateToken();
       const newExpiry = getTokenExpiry(tokenExpiryMinutes);
 
@@ -190,44 +104,23 @@ export async function POST(request: NextRequest) {
         .eq("id", existingVoter.id);
 
       if (updateError) {
-        console.error("DB update error in request-vote-link:", updateError);
-        return NextResponse.json(
-          { error: "An internal server error occurred." },
-          { status: 500 }
-        );
+        console.error("DB update error:", updateError);
+        return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
       }
 
-      const emailSent = await sendVotingLink(existingVoter.email, newToken);
+      // Pass existingVoter.id as the 3rd argument
+      const emailSent = await sendVotingLink(existingVoter.email, newToken, existingVoter.id);
       if (!emailSent) {
-        return NextResponse.json(
-          { error: "Failed to send email. Please try again." },
-          { status: 500 }
-        );
+        return NextResponse.json({ error: "Failed to send email. Please try again." }, { status: 500 });
       }
-
-      // Stamp link_sent_at only after a confirmed successful send.
-      const { error: stampError } = await supabase
-        .from("voters")
-        .update({ link_sent_at: new Date().toISOString() })
-        .eq("id", existingVoter.id);
-
-      if (stampError) {
-        console.error("Failed to stamp link_sent_at (reissue path):", stampError);
-      }
-
-      return NextResponse.json(
-        { message: "New voting link sent to your email." },
-        { status: 200 }
-      );
+      return NextResponse.json({ message: "New voting link sent to your email." }, { status: 200 });
     }
 
-    // 6. New voter — atomic upsert on normalized_email to eliminate the race
-    // condition AND close off the dot/plus-trick at the DB level (belt and
-    // braces alongside the read check above).
+    // 6. NEW VOTER PATH
     const newToken = generateToken();
     const newExpiry = getTokenExpiry(tokenExpiryMinutes);
 
-    const { error: upsertError } = await supabase.from("voters").upsert(
+    const { data: upsertedVoter, error: upsertError } = await supabase.from("voters").upsert(
       {
         email: cleanedEmail,
         normalized_email: normalizedEmail,
@@ -237,44 +130,25 @@ export async function POST(request: NextRequest) {
         user_agent: request.headers.get("user-agent"),
       },
       { onConflict: "normalized_email" }
-    );
+    )
+    .select() // Return the inserted/updated row
+    .single(); // Ensure it's a single object, not an array
 
-    if (upsertError) {
-      console.error("DB upsert error in request-vote-link:", upsertError);
-      return NextResponse.json(
-        { error: "An internal server error occurred." },
-        { status: 500 }
-      );
+    if (upsertError || !upsertedVoter) {
+      console.error("DB upsert error:", upsertError);
+      return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
     }
 
-    const emailSent = await sendVotingLink(cleanedEmail, newToken);
+    // Pass upsertedVoter.id as the 3rd argument
+    const emailSent = await sendVotingLink(cleanedEmail, newToken, upsertedVoter.id);
     if (!emailSent) {
-      return NextResponse.json(
-        { error: "Failed to send email. Please try again." },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: "Failed to send email. Please try again." }, { status: 500 });
     }
 
-    // Stamp link_sent_at only after a confirmed successful send.
-    const { error: stampError } = await supabase
-      .from("voters")
-      .update({ link_sent_at: new Date().toISOString() })
-      .eq("normalized_email", normalizedEmail);
+    return NextResponse.json({ message: "Voting link sent to your email." }, { status: 200 });
 
-    if (stampError) {
-      console.error("Failed to stamp link_sent_at (new voter path):", stampError);
-    }
-
-    return NextResponse.json(
-      { message: "Voting link sent to your email." },
-      { status: 200 }
-    );
   } catch (error: unknown) {
     console.error("Error in request-vote-link:", error);
-    // No internal details leaked to the client
-    return NextResponse.json(
-      { error: "An internal server error occurred." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
   }
 }

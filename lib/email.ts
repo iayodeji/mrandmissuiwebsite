@@ -9,7 +9,7 @@
  * Endpoint (mirrors the SDK's `emails.send`):
  *   POST https://api.sendbyte.africa/v1/emails
  *   Authorization: Bearer <SENDBYTE_API_KEY>
- *   body: { from, to, subject, html }
+ *   body: { from, to, subject, html, metadata }
  */
 
 const SENDBYTE_API_URL = "https://api.sendbyte.africa/v1/emails";
@@ -23,7 +23,6 @@ const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.mrandmissuniba
 );
 
 if (!sendbyteApiKey) {
-  
   console.warn("⚠️  mail key not set — emails will not be sent (development mode)");
 }
 
@@ -36,6 +35,7 @@ async function sendViaSendByte(payload: {
   to: string;
   subject: string;
   html: string;
+  metadata?: Record<string, string>;
 }): Promise<void> {
   if (!sendbyteApiKey) {
     throw new Error("SENDBYTE_API_KEY is not set");
@@ -96,7 +96,11 @@ async function sendViaSendByte(payload: {
   throw lastError ?? new Error("Failed to send email after exhausting retries");
 }
 
-export async function sendVotingLink(email: string, token: string): Promise<boolean> {
+export async function sendVotingLink(
+  email: string,
+  token: string,
+  voterId: string
+): Promise<boolean> {
   const voteLink = `${siteUrl}/vote?token=${token}`;
 
   const emailContent = `
@@ -251,7 +255,7 @@ export async function sendVotingLink(email: string, token: string): Promise<bool
   `;
 
   if (!sendbyteApiKey) {
-    console.log(`[DEV] Would send voting link to ${email}:\n${voteLink}`);
+    console.log(`[DEV] Would send voting link to ${email} (voter ID: ${voterId}):\n${voteLink}`);
     return true;
   }
 
@@ -261,6 +265,9 @@ export async function sendVotingLink(email: string, token: string): Promise<bool
       to: email,
       subject: "Your Mr & Miss Unibadan Voting Link 🎉",
       html: emailContent,
+      metadata: {
+        voter_id: voterId, // Sent to SendByte so it's echoed in the delivery webhook
+      },
     });
     return true;
   } catch (error) {

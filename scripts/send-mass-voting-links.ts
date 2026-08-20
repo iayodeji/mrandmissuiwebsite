@@ -107,8 +107,8 @@ async function main() {
           throw new Error(`DB update failed: ${updateError.message}`);
         }
 
-        // 2. Send the voting link email
-        const sent = await sendVotingLink(voter.email, token);
+        // 2. Send the voting link email (NOW INCLUDES VOTER.ID)
+        const sent = await sendVotingLink(voter.email, token, voter.id);
         if (!sent) {
           throw new Error("sendVotingLink returned false");
         }
