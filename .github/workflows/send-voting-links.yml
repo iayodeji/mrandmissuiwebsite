@@ -1,6 +1,6 @@
 # .github/workflows/send-voting-links.yml
 #
-# Polls public.voters every 10 minutes. If 50 or more voters have
+# Polls public.voters every 5 minutes. If 5 or more voters have
 # has_voted = false AND link_sent_at IS NULL (i.e. registered but never
 # emailed a link yet), runs scripts/send-mass-voting-links.ts to send
 # them one-time voting links.
@@ -17,7 +17,7 @@ name: send-voting-links
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/5 * * * *'
   workflow_dispatch: {}
 
 jobs:
@@ -39,17 +39,17 @@ jobs:
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
       - name: Set up Node
-        if: fromJSON(steps.check.outputs.count) >= 50
+        if: fromJSON(steps.check.outputs.count) >= 5
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install deps
-        if: fromJSON(steps.check.outputs.count) >= 50
+        if: fromJSON(steps.check.outputs.count) >= 5
         run: npm ci
 
       - name: Send voting links
-        if: fromJSON(steps.check.outputs.count) >= 50
+        if: fromJSON(steps.check.outputs.count) >= 5
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
