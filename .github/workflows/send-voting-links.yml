@@ -42,7 +42,7 @@ jobs:
         if: fromJSON(steps.check.outputs.count) >= 5
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install deps
         if: fromJSON(steps.check.outputs.count) >= 5
