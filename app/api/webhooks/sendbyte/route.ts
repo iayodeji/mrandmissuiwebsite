@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import crypto from "crypto";
 
-// 1. Health check handler for SendByte ping/verification checks
 export async function GET() {
   return NextResponse.json({ status: "SendByte Webhook Endpoint Active" }, { status: 200 });
 }
@@ -10,42 +9,61 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const bodyText = await request.text();
-    const signature =
+    const signatureHeader =
       request.headers.get("x-sendbyte-signature") ||
       request.headers.get("sendbyte-signature");
     const secret = process.env.SENDBYTE_WEBHOOK_SECRET;
 
-    // Log diagnostic info to Vercel/server logs
-    console.log("SendByte Webhook Event Received:", {
-      hasSignature: !!signature,
-      hasSecret: !!secret,
-    });
-
     if (!secret) {
-      console.error("SENDBYTE_WEBHOOK_SECRET is missing from environment variables!");
-      // Return 200 during debugging so SendByte doesn't disable the endpoint
-      return NextResponse.json({ error: "Missing secret configuration" }, { status: 200 });
+      console.error("SENDBYTE_WEBHOOK_SECRET is missing!");
+      return NextResponse.json({ error: "Missing secret" }, { status: 200 });
     }
 
-    if (!signature) {
-      console.warn("Missing signature header from SendByte request");
-      return NextResponse.json({ error: "Missing signature header" }, { status: 200 });
+    if (!signatureHeader) {
+      console.warn("Missing signature header");
+      return NextResponse.json({ error: "Missing signature" }, { status: 200 });
     }
 
-    // Verify HMAC signature
+    // 1. Parse the header: "t=1787251292,v1=fa93a28..."
+    const signatureParts = signatureHeader.split(",").reduce((acc, part) => {
+      const [key, value] = part.split("=");
+      acc[key] = value;
+      return acc;
+    }, {} as Record<string, string>);
+
+    const timestamp = signatureParts["t"];
+    const actualSignature = signatureParts["v1"];
+
+    if (!timestamp || !actualSignature) {
+      console.error("Malformed signature header:", signatureHeader);
+      return NextResponse.json({ error: "Invalid signature format" }, { status: 200 });
+    }
+
+    // 2. Prevent Replay Attacks (Optional but recommended)
+    // Check if the webhook is older than 5 minutes (300 seconds)
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    if (currentTimestamp - parseInt(timestamp, 10) > 300) {
+      console.error("Webhook timestamp is too old (expired)");
+      return NextResponse.json({ error: "Expired signature" }, { status: 200 });
+    }
+
+    // 3. Compute HMAC over `${timestamp}.${bodyText}`
+    const payloadToSign = `${timestamp}.${bodyText}`;
     const expectedSignature = crypto
       .createHmac("sha256", secret)
-      .update(bodyText)
+      .update(payloadToSign)
       .digest("hex");
 
-    if (signature !== expectedSignature) {
+    // 4. Securely compare the expected signature with the actual v1 signature
+    if (actualSignature !== expectedSignature) {
       console.error("SendByte signature mismatch!", {
-        received: signature,
+        received: actualSignature,
         expected: expectedSignature,
       });
-      // Return 200 while tuning signature checks to prevent lockouts
       return NextResponse.json({ error: "Invalid signature" }, { status: 200 });
     }
+
+    // --- SIGNATURE IS VALID past this point ---
 
     const payload = JSON.parse(bodyText);
     const eventType = payload.event || payload.type;
@@ -59,13 +77,14 @@ export async function POST(request: NextRequest) {
 
       if (error) {
         console.error("Failed to update link_sent_at in DB:", error);
+      } else {
+        console.log(`Successfully recorded delivery for voter: ${voterId}`);
       }
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
     console.error("SendByte Webhook Error:", error);
-    // Always return 200 so SendByte considers the HTTP delivery completed
     return NextResponse.json({ error: "Internal handler error" }, { status: 200 });
   }
 }
