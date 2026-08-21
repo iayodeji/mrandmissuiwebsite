@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 
     // 1. Check rate limit
     const rateLimitKey = `request-vote-link:${clientIp}`;
-    const maxRequests = parseInt(process.env.VOTING_RATE_LIMIT_PER_HOUR || "15");
+    const maxRequests = parseInt(process.env.VOTING_RATE_LIMIT_PER_HOUR || "100");
     const rateAllowed = await checkRateLimit(rateLimitKey, maxRequests, 60);
     if (!rateAllowed) {
       return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
