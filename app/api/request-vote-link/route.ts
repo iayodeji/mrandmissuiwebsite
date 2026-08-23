@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
     }
 
-    const tokenExpiryMinutes = parseInt(process.env.VOTING_TOKEN_EXPIRY_MINUTES || "10");
+    const tokenExpiryMinutes = parseInt(process.env.VOTING_TOKEN_EXPIRY_MINUTES || "120");
 
     if (existingVoter) {
       if (existingVoter.has_voted) {
