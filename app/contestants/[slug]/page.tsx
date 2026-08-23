@@ -157,8 +157,8 @@ export default async function ContestantProfilePage({
             )}
 
             <div className="seo-profile-hero__actions">
-              <a className="gold-button focus-ring" href="/#vote">
-                Vote for {profile.name.split(" ")[0]} <span aria-hidden="true">↘</span>
+              <a className="gold-button focus-ring" href="/leaderboard">
+                See final standings <span aria-hidden="true">↗</span>
               </a>
               <a className="ghost-button focus-ring" href="/contestants">
                 All contestants <span aria-hidden="true">↘</span>

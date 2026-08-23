@@ -48,15 +48,16 @@ export default function MrAndMissUnibadanPage() {
           </h1>
           <p className="seo-lead">
             The official voting platform for {SITE_NAME} {SITE_EDITION}. Twenty students of the
-            University of Ibadan, one people&apos;s choice crown each — meet them, follow the
-            votes, and decide who carries the identity of Unibadan forward.
+            University of Ibadan, one people&apos;s choice crown each — the votes are in and
+            the truth has been revealed. Watch your OTP contestants at the Grand Finale on the
+            19th of September.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Vote now <span aria-hidden="true">↘</span>
+            <a className="gold-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
-            <a className="ghost-button focus-ring" href="/leaderboard">
-              View live votes <span aria-hidden="true">↗</span>
+            <a className="ghost-button focus-ring" href="/contestants">
+              Meet the contestants <span aria-hidden="true">↘</span>
             </a>
           </div>
           <div className="seo-hero__meta">
@@ -83,7 +84,7 @@ export default function MrAndMissUnibadanPage() {
           </div>
           <div className="seo-body">
             <p>
-              “Unibadan” is the affectionate name students give the University of Ibadan — and
+              &ldquo;Unibadan&rdquo; is the affectionate name students give the University of Ibadan — and
               {SITE_NAME} is its crown jewel event. Now in its {SITE_EDITION} edition, the
               pageant picks the two students who best embody the university&apos;s spirit of
               brilliance, grace and leadership: one Mr Unibadan and one Miss Unibadan.
@@ -91,14 +92,12 @@ export default function MrAndMissUnibadanPage() {
             <p>
               Every candidate was nominated for excellence in their faculty, from Dentistry to
               Drama, Nursing to Mathematics. What sets this pageant apart is that the final
-              verdict belongs to the students. Voting is open to everyone with a valid email —
-              one email, one ballot, one vote per candidate.
+              verdict belongs to the students.
             </p>
             <p>
-              The crown night caps months of advocacy projects and leadership showcases. But
-              before the gowns and the grand hall, the numbers decide. Follow the{" "}
-              <a href="/leaderboard">live leaderboard</a> to see which candidates are pulling
-              ahead, and make sure your favourite isn&apos;t left behind.
+              The crown night caps months of advocacy projects and leadership showcases. Follow the{" "}
+              <a href="/leaderboard">final leaderboard</a> to see which candidates
+              captured the heart of UI.
             </p>
           </div>
         </div>
@@ -125,22 +124,17 @@ export default function MrAndMissUnibadanPage() {
       <section className="seo-section seo-section--cream">
         <div className="seo-section__inner">
           <div className="seo-section__head">
-            <p className="eyebrow dark-eyebrow">Why vote</p>
+            <p className="eyebrow dark-eyebrow">The truth revealed</p>
             <h2 className="seo-section__title">
-              Your ballot <em>decides the crown</em>
+              Your OTP <em>contestants</em>
             </h2>
           </div>
           <div className="seo-body">
             <p>
-              There are no judges and no shortlists on crown night — only the total of every
-              student&apos;s vote. Each ballot is secured with an emailed magic link, so the
-              results are as fair as they are transparent. Support your faculty, back the story
-              you believe in, and be part of the community that crowns Mr &amp; Miss Unibadan.
-            </p>
-            <p>
-              New to the process? Read the <a href="/how-to-vote">step-by-step voting guide</a>,
-              or check the <a href="/faq">frequently asked questions</a> for everything from
-              link expiry to vote limits.
+              The votes have been counted and the people have spoken. These are the contestants
+              who captured the hearts of the University of Ibadan community. Watch them compete
+              at the <strong>Grand Finale on the 19th of September</strong> for the crown
+              of Mr &amp; Miss Unibadan {SITE_EDITION}.
             </p>
           </div>
         </div>

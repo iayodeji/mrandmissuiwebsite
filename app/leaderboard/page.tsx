@@ -31,21 +31,25 @@ export default function LeaderboardPage() {
 
       <section className="seo-hero">
         <div className="seo-hero__inner">
-          <p className="seo-kicker">Live results · {SITE_EDITION}</p>
+          <p className="seo-kicker">Final results · {SITE_EDITION}</p>
           <h1 className="seo-title">
             The <em>leaderboard</em>
           </h1>
           <p className="seo-lead">
-            Current standings for the Mr &amp; Miss Unibadan {SITE_EDITION} people&apos;s
-            choice vote. Every confirmed ballot moves the numbers — make sure your favourite
-            isn&apos;t left behind.
+            The truth has been revealed. These are the final standings for the Mr &amp; Miss
+            Unibadan {SITE_EDITION} people&apos;s choice vote — a testament to the
+            contestants who captured the heart of the University of Ibadan.
+          </p>
+          <p style={{ fontSize: "1.1rem", lineHeight: 1.6, marginBottom: "24px" }}>
+            Your OTP contestants have been chosen. Watch them compete
+            at the <strong>Grand Finale on the 19th of September</strong>.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Add your vote <span aria-hidden="true">↘</span>
-            </a>
             <a className="ghost-button focus-ring" href="/contestants">
               Meet the contestants <span aria-hidden="true">↘</span>
+            </a>
+            <a className="ghost-button focus-ring" href="/">
+              Return Home <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>
@@ -59,8 +63,8 @@ export default function LeaderboardPage() {
               Ranked by <em>your votes</em>
             </h2>
             <p className="seo-section__copy">
-              The table below reflects the standings shown on the platform. During the voting
-              window, live counts update on the home page as ballots are confirmed.
+              The final standings are locked in. These numbers represent the true voice
+              of the University of Ibadan community.
             </p>
           </div>
 
@@ -101,13 +105,13 @@ export default function LeaderboardPage() {
         <div className="seo-body">
           <p>
             Each entry on this leaderboard represents a real, verified ballot: one email, one
-            vote. The totals are tallied from confirmed votes only, so the standings stay fair
-            from the first ballot to the final count on crown night.
+            vote. The totals are tallied from confirmed votes only — ensuring the standings
+            reflect genuine support from the UI community.
           </p>
           <p>
-            Want to change the order? The fastest way is your own ballot — and the second
-            fastest is telling your friends. <a href="/vote">Vote now</a>, or dig into the{" "}
-            <a href="/faq">rules of the vote</a> first.
+            The voting period is now closed. The results stand as a testament to the
+            contestants who truly represented the spirit of the University of Ibadan.
+            Catch the final reveal at the <strong>Grand Finale on the 19th of September</strong>.
           </p>
         </div>
       </section>

@@ -10,7 +10,7 @@ import {
 
 export const metadata: Metadata = makeMetadata({
   title: `All Contestants — Mr & Miss Unibadan ${SITE_EDITION}`,
-  description: `Meet all 20 Mr and Miss Unibadan ${SITE_EDITION} contestants from the University of Ibadan. Browse every candidate's profile, faculty and quote, then cast your vote.`,
+  description: `Meet all 20 Mr and Miss Unibadan ${SITE_EDITION} contestants from the University of Ibadan. Browse every candidate's profile, faculty and quote.`,
   path: "/contestants",
   titleAbsolute: true,
 });
@@ -41,15 +41,12 @@ export default function ContestantsPage() {
             All <em>contestants</em>
           </h1>
           <p className="seo-lead">
-            Twenty students. Two crowns. One people&apos;s choice. Browse every Mr and Miss
-            Unibadan {SITE_EDITION} contestant below and find the story you want to back.
+            Twenty students. Two crowns. One people&apos;s choice. These are your OTP contestants
+            heading to the <strong>Grand Finale on the 19th of September</strong>.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Cast your vote <span aria-hidden="true">↘</span>
-            </a>
-            <a className="ghost-button focus-ring" href="/leaderboard">
-              View live votes <span aria-hidden="true">↗</span>
+            <a className="gold-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>

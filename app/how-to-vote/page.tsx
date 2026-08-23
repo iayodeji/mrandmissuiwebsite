@@ -58,20 +58,24 @@ export default function HowToVotePage() {
 
       <section className="seo-hero">
         <div className="seo-hero__inner">
-          <p className="seo-kicker">Voting guide · {SITE_EDITION}</p>
+          <p className="seo-kicker">Voting closed · {SITE_EDITION}</p>
           <h1 className="seo-title">
-            How to <em>vote</em>
+            Voting has <em>ended</em>
           </h1>
           <p className="seo-lead">
-            Voting for Mr &amp; Miss Unibadan {SITE_EDITION} takes about two minutes. Here is
-            exactly how it works — from your inbox to the leaderboard.
+            The votes are in and the truth has been revealed. The leaderboard now stands as a
+            testament to who the University of Ibadan truly believes in.
+          </p>
+          <p style={{ fontSize: '1.1rem', lineHeight: 1.6, marginBottom: '24px' }}>
+            Your OTP contestants have been chosen. Watch them compete
+            at the <strong>Grand Finale on the 19th of September</strong>.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Start voting now <span aria-hidden="true">↘</span>
+            <a className="gold-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
-            <a className="ghost-button focus-ring" href="/faq">
-              Read the FAQ <span aria-hidden="true">↘</span>
+            <a className="ghost-button focus-ring" href="/contestants">
+              Meet the contestants <span aria-hidden="true">↘</span>
             </a>
           </div>
         </div>

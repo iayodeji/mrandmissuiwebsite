@@ -49,12 +49,12 @@ export default function UiPageantPage() {
           </h1>
           <p className="seo-lead">
             {SITE_NAME} {SITE_EDITION} is the pageant of the University of Ibadan — the oldest
-            and one of the most prestigious universities in Nigeria. This is where the campus
-            crowns its Mr Unibadan and Miss Unibadan, and you hold the deciding vote.
+            and one of the most prestigious universities in Nigeria. The votes are in and the
+            truth has been revealed. Watch your OTP contestants at the Grand Finale on the 19th of September.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Vote in the pageant <span aria-hidden="true">↘</span>
+            <a className="gold-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
             <a className="ghost-button focus-ring" href="/past-winners">
               Past Mr &amp; Miss UI <span aria-hidden="true">↘</span>
@@ -99,7 +99,7 @@ export default function UiPageantPage() {
             <p>
               Alumni of the pageant have gone on to lead student unions, found initiatives and
               represent UI on national stages. See the <a href="/past-winners">roll of honour</a>{" "}
-              from previous Mr &amp; Miss UI editions, then decide who joins them.
+              from previous Mr &amp; Miss UI editions.
             </p>
           </div>
         </div>
@@ -139,10 +139,9 @@ export default function UiPageantPage() {
               standard the {SITE_EDITION} contestants are reaching for.
             </p>
             <p>
-              The next chapter of that story is being written right now, one vote at a time.
-              Don&apos;t watch from the sidelines — <a href="/mr-and-miss-ui">meet the
-              contestants</a>, follow the <a href="/leaderboard">leaderboard</a>, and{" "}
-              <a href="/vote">cast your ballot</a>.
+              The next chapter of that story is being written right now. Don&apos;t watch from
+              the sidelines — <a href="/mr-and-miss-ui">meet the contestants</a>, follow the{" "}
+              <a href="/leaderboard">leaderboard</a>, and see the final results.
             </p>
           </div>
           <div className="seo-related">

@@ -64,8 +64,8 @@ export default function AboutPage() {
             <a className="gold-button focus-ring" href="/contestants">
               Meet the contestants <span aria-hidden="true">↘</span>
             </a>
-            <a className="ghost-button focus-ring" href="/vote">
-              Cast your vote <span aria-hidden="true">↘</span>
+            <a className="ghost-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>
@@ -81,8 +81,8 @@ export default function AboutPage() {
           </div>
           <div className="seo-body">
             <p>
-              Most pageants are decided by a panel of judges. Mr &amp; Miss Unibadan flips the
-              script: the crown belongs to whoever the University of Ibadan community chooses.
+              Most pageants are decided by a panel of judges only. Mr &amp; Miss Unibadan flips the
+              script: Part of the Criterion is whoever the University of Ibadan community chooses.
               Every student, alumni and supporter with a valid email gets an equal voice, and
               every voice lands as one verified vote on the live leaderboard.
             </p>
@@ -125,8 +125,8 @@ export default function AboutPage() {
             <p>
               The pageant runs on support from across UI and beyond — from the candidates on
               stage to the sponsors behind the scenes to every single voter. Explore the{" "}
-              <a href="/contestants">full lineup</a>, follow the <a href="/leaderboard">live
-              standings</a>, and make sure your voice is part of the decision.
+              <a href="/contestants">full lineup</a>, follow the <a href="/leaderboard">final
+              standings</a>, and be part of the community.
             </p>
             <p>
               Questions about the {SITE_EDITION} edition? The <a href="/faq">FAQ</a> has

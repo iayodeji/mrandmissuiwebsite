@@ -52,16 +52,16 @@ export default function MrAndMissUiPage() {
             Mr and Miss <em>UI</em> {SITE_EDITION}
           </h1>
           <p className="seo-lead">
-            The official people&apos;s choice pageant of the University of Ibadan. Meet the
-            contestants carrying the identity of UI forward, follow the live votes, and cast
-            your ballot for Mr &amp; Miss Unibadan {SITE_EDITION}.
+            The official people&apos;s choice pageant of the University of Ibadan. The votes
+            are in and the truth has been revealed. Meet your OTP contestants heading
+            to the <strong>Grand Finale on the 19th of September</strong>.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Cast your vote <span aria-hidden="true">↘</span>
+            <a className="gold-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
-            <a className="ghost-button focus-ring" href="/how-to-vote">
-              How voting works <span aria-hidden="true">↘</span>
+            <a className="ghost-button focus-ring" href="/contestants">
+              Meet the contestants <span aria-hidden="true">↘</span>
             </a>
           </div>
           <div className="seo-hero__meta">
@@ -147,8 +147,8 @@ export default function MrAndMissUiPage() {
             <p>
               <a href="/mr-unibadan-contestants">Browse all Mr Unibadan contestants</a> or{" "}
               <a href="/miss-unibadan-contestants">browse all Miss Unibadan contestants</a>.
-              Prefer a quick view? The <a href="/leaderboard">live leaderboard</a> ranks every
-              candidate by votes in real time.
+              Prefer a quick view? The <a href="/leaderboard">final leaderboard</a> ranks every
+              candidate by votes.
             </p>
           </div>
         </div>
@@ -156,41 +156,18 @@ export default function MrAndMissUiPage() {
 
       <section className="seo-section">
         <div className="seo-section__head">
-          <p className="eyebrow">Your vote matters</p>
+          <p className="eyebrow">The truth revealed</p>
           <h2 className="seo-section__title">
-            Cast your vote in <em>three steps</em>
+            Your OTP <em>contestants</em>
           </h2>
         </div>
-        <div className="seo-steps">
-          <div className="seo-step">
-            <p className="seo-step__index">01</p>
-            <h3 className="seo-step__title">Enter your email</h3>
-            <p className="seo-step__copy">
-              Submit your email address on the home page. A secure voting link lands in your
-              inbox within minutes.
-            </p>
-          </div>
-          <div className="seo-step">
-            <p className="seo-step__index">02</p>
-            <h3 className="seo-step__title">Open your ballot</h3>
-            <p className="seo-step__copy">
-              Follow the magic link to your private ballot. Choose your Mr and your Miss —
-              each link works exactly once.
-            </p>
-          </div>
-          <div className="seo-step">
-            <p className="seo-step__index">03</p>
-            <h3 className="seo-step__title">Submit and share</h3>
-            <p className="seo-step__copy">
-              Confirm your vote and watch the leaderboard climb. Then rally your friends —
-              one email, one vote.
-            </p>
-          </div>
-        </div>
-        <div className="seo-hero__actions">
-          <a className="gold-button focus-ring" href="/how-to-vote">
-            Read the full guide <span aria-hidden="true">↘</span>
-          </a>
+        <div className="seo-body">
+          <p>
+            The votes have been counted and the people have spoken. These are the contestants
+            who captured the hearts of the University of Ibadan community. Watch them compete
+            at the <strong>Grand Finale on the 19th of September</strong> for the crown
+            of Mr &amp; Miss Unibadan {SITE_EDITION}.
+          </p>
         </div>
       </section>
     </PageShell>

@@ -45,17 +45,8 @@ function ContestantCard({ contestant }: { contestant: CatalogCandidate }) {
           <span>{CATEGORY_LABEL[contestant.category]}</span>
         </div>
         {contestant.quote && (
-          <p className="contestant-quote">“{contestant.quote}”</p>
+          <p className="contestant-quote">&ldquo;{contestant.quote}&rdquo;</p>
         )}
-        <div className="vote-row">
-          <a
-            className="vote-button focus-ring"
-            href="#vote"
-            aria-label={`Vote for ${contestant.name}`}
-          >
-            Vote now <span aria-hidden="true">♥</span>
-          </a>
-        </div>
       </div>
     </article>
   );
@@ -94,7 +85,7 @@ export function ChapterTwoSection() {
             </h2>
           </div>
           <p className="contestants-summary">
-            Every portrait carries a different discipline, story, and kind of presence. Choose the candidate whose journey deserves your vote.
+            Every portrait carries a different discipline, story, and kind of presence. These are your OTP contestants heading to the Grand Finale on the 19th of September.
           </p>
         </div>
 

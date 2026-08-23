@@ -96,15 +96,15 @@ export default function FaqPage() {
             Frequently asked <em>questions</em>
           </h1>
           <p className="seo-lead">
-            Everything you need to know about voting for Mr &amp; Miss Unibadan {SITE_EDITION}
+            Everything you need to know about Mr &amp; Miss Unibadan {SITE_EDITION}
             — ballots, links, rules and the leaderboard.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Vote now <span aria-hidden="true">↘</span>
+            <a className="gold-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
-            <a className="ghost-button focus-ring" href="/how-to-vote">
-              Step-by-step guide <span aria-hidden="true">↘</span>
+            <a className="ghost-button focus-ring" href="/contestants">
+              Meet the contestants <span aria-hidden="true">↘</span>
             </a>
           </div>
         </div>

@@ -44,14 +44,14 @@ export default function MissContestantsPage() {
           <p className="seo-lead">
             Meet the {MISS_CANDIDATE_PROFILES.length} candidates vying to become Miss Unibadan
             {SITE_EDITION} — the young women carrying the identity of the University of Ibadan
-            forward. Choose your Miss and make your vote count.
+            forward. These are your OTP contestants heading to the Grand Finale on the 19th of September.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Vote for Miss Unibadan <span aria-hidden="true">↘</span>
-            </a>
             <a className="ghost-button focus-ring" href="/mr-unibadan-contestants">
               Mr Unibadan candidates <span aria-hidden="true">↘</span>
+            </a>
+            <a className="ghost-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>

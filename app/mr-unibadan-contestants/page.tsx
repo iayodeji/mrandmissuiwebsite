@@ -44,14 +44,14 @@ export default function MrContestantsPage() {
           <p className="seo-lead">
             Meet the {MR_CANDIDATE_PROFILES.length} candidates vying to become Mr Unibadan
             {SITE_EDITION} — the young men carrying the identity of the University of Ibadan
-            forward. Choose your Mr and make your vote count.
+            forward. These are your OTP contestants heading to the Grand Finale on the 19th of September.
           </p>
           <div className="seo-hero__actions">
-            <a className="gold-button focus-ring" href="/vote">
-              Vote for Mr Unibadan <span aria-hidden="true">↘</span>
-            </a>
             <a className="ghost-button focus-ring" href="/miss-unibadan-contestants">
               Miss Unibadan candidates <span aria-hidden="true">↘</span>
+            </a>
+            <a className="ghost-button focus-ring" href="/leaderboard">
+              See final standings <span aria-hidden="true">↗</span>
             </a>
           </div>
         </div>

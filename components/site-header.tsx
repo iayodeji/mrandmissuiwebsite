@@ -20,10 +20,6 @@ export function SiteHeader() {
             </a>
           ))}
         </nav>
-
-        <a className="nav-cta focus-ring" href="#vote">
-          Vote now <span aria-hidden="true">↘</span>
-        </a>
       </div>
 
       <nav className="mobile-rail" aria-label="Mobile navigation">

@@ -4,7 +4,7 @@ import { makeMetadata } from "@/lib/seo";
 export const metadata: Metadata = makeMetadata({
   title: "Vote — Mr & Miss Unibadan 2026",
   description:
-    "Cast your vote for Mr and Miss Unibadan 2026. Select one Mr candidate and one Miss candidate from the University of Ibadan and submit your ballot securely.",
+    "Voting for Mr and Miss Unibadan 2026 has closed. The truth has been revealed.",
   path: "/vote",
 });
 
